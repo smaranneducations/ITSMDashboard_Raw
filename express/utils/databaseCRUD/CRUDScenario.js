@@ -1,9 +1,9 @@
 import sql from 'mssql';
-import config from './mssqlconfig.js';
+import mssqlconfig from '../../mssqlconfig.js';
 
-export async function getColumnNames(tableName) {
+async function getColumnNames(tableName) {
     try {
-        await sql.connect(config);
+        await sql.connect(mssqlconfig);
         const query = `SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '${tableName}'`;
         const result = await sql.query(query);
         if (result.recordset.length === 0) {
@@ -13,7 +13,9 @@ export async function getColumnNames(tableName) {
             name: row.COLUMN_NAME,
             dataType: row.DATA_TYPE
         }));
+        console.log('Columns:', columns);
         return columns;
+        
     } catch (err) {
         throw err;
     } finally {
@@ -24,9 +26,9 @@ export async function getColumnNames(tableName) {
 
 
 // Function to connect to the database and fetch data
-export async function fetchData(tableName) {
+async function fetchData(tableName) {
     try {
-        await sql.connect(config);
+        await sql.connect(mssqlconfig);
         const query = `SELECT * FROM ${tableName}`;
         const result = await sql.query(query);
         console.log('Fetched data:', result.recordset);
@@ -41,14 +43,14 @@ export async function fetchData(tableName) {
 
 
 
-export async function insertOrUpdateRecord_Sceanrio(tableName, records) {
+async function insertOrUpdateRecord_Sceanrio(tableName, records) {
     let updatedCount = 0;
     let insertedCount = 0;
     let statusText = '';
 
 
     try {
-        await sql.connect(config);
+        await sql.connect(mssqlconfig);
         for (let record of records) {
             // Check if the record exists in the table based on the unique identifier (ScenarioCode)
             const queryCheckExistence = `SELECT COUNT(*) AS count FROM ${tableName} WHERE ScenarioCode = '${record.ScenarioCode}'`;
@@ -87,3 +89,5 @@ export async function insertOrUpdateRecord_Sceanrio(tableName, records) {
     }
 
 }
+
+export  { getColumnNames, fetchData, insertOrUpdateRecord_Sceanrio };

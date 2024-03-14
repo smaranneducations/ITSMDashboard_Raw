@@ -1,15 +1,12 @@
 import express from 'express';
-import { getColumnNames,fetchData, insertOrUpdateRecord_Sceanrio } from './utils/database.js';
 import bodyParser from 'body-parser';
+import { getColumnNames,fetchData, insertOrUpdateRecord_Sceanrio } from '../databaseCRUD/CRUDScenario.js';
 
-const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.send('Hello World by bhasker');
-});
+const ScenarioRouter = express.Router();
 
 // API endpoint to get column names and types for a given table
-router.get('/api/columns/:tableName', async (req, res) => {
+ScenarioRouter.get('/api/columns/:tableName', async (req, res) => {
   try {
     const tableName = req.params.tableName;
     const columnsInfo = await getColumnNames(tableName);
@@ -20,10 +17,11 @@ router.get('/api/columns/:tableName', async (req, res) => {
 });
 
 // API endpoint to fetch data from a given table
-router.get('/api/fetchdata/:tableName', async (req, res) => {
+ScenarioRouter.get('/api/fetchdata/:tableName', async (req, res) => {
   try {
     const tableName = req.params.tableName;
     const data = await fetchData(tableName);
+    console.log('data:', data);
     res.json(data);
   } catch (error) {
     res.status(500).send(error.message); 
@@ -31,7 +29,7 @@ router.get('/api/fetchdata/:tableName', async (req, res) => {
 });
 
 // API endpoint to insert or update a record in a given table
-router.post('/api/insertorupdaterecord_Scenario/:tableName',bodyParser.json(), async (req, res) => {
+ScenarioRouter.post('/api/insertorupdaterecord_Scenario/:tableName',bodyParser.json(), async (req, res) => {
   try {
     const tableName = req.params.tableName;
     const record = req.body; // Assuming the request body contains the record data
@@ -48,4 +46,4 @@ router.post('/api/insertorupdaterecord_Scenario/:tableName',bodyParser.json(), a
   }
 });
 
-export default router;
+export default ScenarioRouter;

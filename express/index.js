@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import router from './routers.js';
+import ScenarioRouter from './utils/clientAPIs/APIScenario.js';
 import http from 'http';
 import https from 'https';
 import fs from 'fs';
@@ -12,7 +12,7 @@ const app = express();
 app.use(cors());
 
 // Use the router
-app.use('/', router);
+app.use('/', ScenarioRouter);
 
 app.use(express.static('public'));
 

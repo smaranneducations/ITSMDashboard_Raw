@@ -9,7 +9,7 @@ function divide(a, b) {
     
     } finally {
 
-        return "Value returned from finally block" + error.message;
+        return "Value returned from finally block bhasker" + error.message;
     }
 }
 

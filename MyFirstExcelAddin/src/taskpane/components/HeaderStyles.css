@@ -1,0 +1,35 @@
+.welcome__header {
+    display: flex;
+    align-items: center;
+    height: 10vh; /* Set initial height to 10vh */
+    background-color: #98c3e1; /* Light blue background color */
+    overflow: hidden; /* Prevent content overflow */
+  }
+  
+  .column {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent content overflow */
+  }
+  
+  .logoContainer {
+    width: 20vw; /* Ensure logo container takes full width */
+    height: 10vh; /* Ensure logo container takes full height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .logo {
+    max-width: 100%; /* Ensure logo fits within container */
+    max-height: 100%; /* Ensure logo fits within container */
+  }
+  
+  .message {
+    font-size: 5vw; /* Responsive font size based on viewport width */
+    font-weight: normal;
+    color: #333; /* Default text color */
+  }
+  

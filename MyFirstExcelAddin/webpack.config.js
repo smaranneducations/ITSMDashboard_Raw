@@ -31,6 +31,11 @@ module.exports = async (env, options) => {
     },
     module: {
       rules: [
+          // Rule for handling CSS files
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
         {
           test: /\.jsx?$/,
           use: {

@@ -1,12 +1,12 @@
 import * as React from "react";
 import PropTypes from "prop-types";
 import Header from "./Header";
-import HeroList from "./HeroList";
-import FileSystemNavigator from "./Test";
+import Footer from "./Footer";
 import { Tree, makeStyles } from "@fluentui/react-components";
 import { Ribbon24Regular, LockOpen24Regular, DesignIdeas24Regular } from "@fluentui/react-icons";
-import { TreeView } from "@mui/x-tree-view";
+
 import CreateExcelTable1  from "./CreateExcelTable";
+import {NestedSubmenusControlled} from "./NestedSubmenusControlled";
 
 
 
@@ -14,8 +14,16 @@ const useStyles = makeStyles({
   root: {
     minHeight: "100vh",
   },
+  content : {
+    height: '85vh',
+    backgroundColor: 'lightgrey',
+    border: '1px solid black',
+    fontFamily: 'Arial, sans-serif', // Example font family
+    display: 'flex',
+    flexDirection: 'column',
+    overflowY: 'auto', // Add scroll option if content overflows vertically
+  },
 });
-
 const App = (props) => {
   const styles = useStyles();
   // The list items are static and won't change at runtime,
@@ -38,8 +46,10 @@ const App = (props) => {
   return (
     <div className={styles.root}>
       <Header logo="assets/logo-filled.png" title={props.title} message="ITSM Dashboard" />
-      <FileSystemNavigator/>
-      <CreateExcelTable1/>
+      <div className={styles.content}>
+        {/* Your main content goes here */}
+      </div>
+      <Footer />
     </div>
   );
 };

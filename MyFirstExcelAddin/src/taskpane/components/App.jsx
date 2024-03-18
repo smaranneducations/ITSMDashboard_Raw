@@ -4,6 +4,8 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Tree, makeStyles } from "@fluentui/react-components";
 import { Ribbon24Regular, LockOpen24Regular, DesignIdeas24Regular } from "@fluentui/react-icons";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import ScenarioComponent from "./ScenarioComponent";
 
 import CreateExcelTable1  from "./CreateExcelTable";
 import {NestedSubmenusControlled} from "./NestedSubmenusControlled";
@@ -46,6 +48,11 @@ const App = (props) => {
   return (
     <div className={styles.root}>
       <Header logo="assets/logo-filled.png" title={props.title} message="ITSM Dashboard" />
+      <div>
+      <Routes>        
+        <Route path="taskpane/taskpane.html" element={<ScenarioComponent/>} />
+      </Routes>
+    </div>
       <div className={styles.content}>
         {/* Your main content goes here */}
       </div>

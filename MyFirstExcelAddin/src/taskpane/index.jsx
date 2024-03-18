@@ -2,7 +2,7 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./components/App";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
-import { TreeView } from "@mui/x-tree-view";
+import { BrowserRouter } from 'react-router-dom'; // Import BrowserRouter
 
 /* global document, Office, module, require */
 
@@ -14,9 +14,11 @@ const root = createRoot(rootElement);
 /* Render application after Office initializes */
 Office.onReady(() => {
   root.render(
-    <FluentProvider theme={webLightTheme}>
-      <App title={title} />  
+    <BrowserRouter> {/* Wrap App with BrowserRouter */}
+      <FluentProvider theme={webLightTheme}>
+        <App title={title} />  
       </FluentProvider>
+    </BrowserRouter>
   );
 });
 

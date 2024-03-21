@@ -165,7 +165,9 @@ export const NestedSubmenusControlled = () => {
   return (
     <Menu>
       <MenuTrigger disableButtonEnhancement={true}>
-        <Button style={{ height: "40px" }}>Navigation</Button>
+      <Link to="/home">
+        <Button style={{ height: "40px" }}>Home</Button>
+        </Link>
       </MenuTrigger>
       <MenuPopover>
         <MenuList>

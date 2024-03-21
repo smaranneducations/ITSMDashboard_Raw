@@ -11,6 +11,9 @@ const App = () => {
       <Route exact path="/">
             <div><Testcopy title="bhasker" /></div>
           </Route>
+          <Route exact path="/home">
+            <div><Testcopy title="bhasker" /></div>
+          </Route>
           <Route exact path="/test">
             <div><Test123 /></div>
           </Route>

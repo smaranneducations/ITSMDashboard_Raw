@@ -7,6 +7,7 @@ import {
   MenuItem,
   MenuPopover,
 } from "@fluentui/react-components";
+import { HashRouter, Link } from "react-router-dom";
 
 const EPMEcosystemSubMenu = () => {
   const [open, setOpen] = React.useState(false);
@@ -173,7 +174,11 @@ export const NestedSubmenusControlled = () => {
           <FormsSubMenu />
           <ReportsSubMenu />
           <SecuritySubMenu />
+          <HashRouter>
+          <Link to="/test">
           <MenuItem> Approval workflows </MenuItem>
+          </Link>
+          </HashRouter>
           <EPMEcosystemSubMenu />
         </MenuList>
       </MenuPopover>

@@ -2,7 +2,8 @@ import * as React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./components/App";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
-import { TreeView } from "@mui/x-tree-view";
+import { HashRouter } from "react-router-dom";
+
 
 /* global document, Office, module, require */
 
@@ -14,9 +15,12 @@ const root = createRoot(rootElement);
 /* Render application after Office initializes */
 Office.onReady(() => {
   root.render(
-    <FluentProvider theme={webLightTheme}>
-      <App title={title} />  
-      </FluentProvider>
+      
+        <FluentProvider theme={webLightTheme}>
+          <HashRouter>
+        <App title={title} /> 
+        </HashRouter>
+        </FluentProvider> 
   );
 });
 

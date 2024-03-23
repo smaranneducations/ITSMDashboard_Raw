@@ -7,8 +7,7 @@ import {
   MenuItem,
   MenuPopover,
 } from "@fluentui/react-components";
-import { Link } from "react-router-dom"; // Import Link from React Router
-
+import { HashRouter, Link } from "react-router-dom";
 
 const EPMEcosystemSubMenu = () => {
   const [open, setOpen] = React.useState(false);
@@ -117,7 +116,9 @@ const MasterDataSubMenu = () => {
       </MenuTrigger>
       <MenuPopover>
         <MenuList>
-        <MenuItem> Scenario  </MenuItem>
+        <Link to="/Scenario" style={{ textDecoration: "none" }}>
+        <MenuItem> Scenario </MenuItem>
+        </Link>
         <MenuItem> Year  </MenuItem>
         <MenuItem> Accounts/GL </MenuItem>
         <MenuItem> Activities </MenuItem>
@@ -166,7 +167,9 @@ export const NestedSubmenusControlled = () => {
   return (
     <Menu>
       <MenuTrigger disableButtonEnhancement={true}>
-        <Button style={{ height: "40px" }}>Navigation</Button>
+      <Link to="/home">
+        <Button style={{ height: "40px" }}>Home</Button>
+        </Link>
       </MenuTrigger>
       <MenuPopover>
         <MenuList>
@@ -175,7 +178,9 @@ export const NestedSubmenusControlled = () => {
           <FormsSubMenu />
           <ReportsSubMenu />
           <SecuritySubMenu />
-          <MenuItem as={Link} to="/ScenarioComponent">Approval workflows</MenuItem>
+          <HashRouter>
+          <MenuItem> Approval workflows </MenuItem>
+          </HashRouter>
           <EPMEcosystemSubMenu />
         </MenuList>
       </MenuPopover>

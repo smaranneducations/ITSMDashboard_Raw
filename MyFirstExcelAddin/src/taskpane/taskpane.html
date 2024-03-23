@@ -11,10 +11,29 @@
     <title>Contoso Task Pane Add-in</title>
 
     <!-- Office JavaScript API -->
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <script type="text/javascript">
+        window._historyCache = {
+            replaceState: window.history.replaceState,
+            pushState: window.history.pushState
+        };
+    </script>
+            <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+        
+        <script type="text/javascript">
+       window.history.replaceState = window._historyCache.replaceState;
+       window.history.pushState = window._historyCache.pushState;
+       </script>
 </head>
 
-<body style="width: 100%; height: 100%; margin: 0; padding: 0;">
+<style>
+    body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<body>
     <div id="container"></div>
 
     <!-- 
@@ -24,10 +43,10 @@
         following div display when an unsupported webview is in use, and hides the 
         React container div. 
     -->
-    <div id="tridentmessage" style="display: none; padding: 10;">
+    <!-- <div id="tridentmessage" class="trident-message">
         This add-in will not run in your version of Office. Please upgrade either to perpetual Office 2021 (or later) 
         or to a Microsoft 365 account.
-    </div>
+    </div> -->
     <script>
         if ((navigator.userAgent.indexOf("Trident") !== -1) || (navigator.userAgent.indexOf("Edge") !== -1)) {
             var tridentMessage = document.getElementById("tridentmessage");

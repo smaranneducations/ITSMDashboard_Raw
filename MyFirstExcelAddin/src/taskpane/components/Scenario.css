@@ -1,0 +1,44 @@
+.empty-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 40vh;
+    border-top: 1px solid black; /* Thin black border on top */
+    background-color: #e5ecf1; /* Light blue background */
+    
+}
+
+.edit-data {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: stretch;
+    height: 10vh;
+    width: 100vw;
+    border-top: 1px solid black; /* Thin black border on top */
+    background-color: #548eb7; /* Light blue background */
+    top: 85vh;
+    position: absolute;
+    
+}
+
+.download-button {
+ justify-self: flex-end;
+ padding-right: 5vw;
+ 
+}
+.upload-button{
+    justify-self: flex-end;
+    padding-right: 5vw;
+}
+.box-text {
+    font-size: 1rem; /* Responsive font size based on viewport width */
+    font-weight: bold; /* Bold text */
+    color: #0b0101; /* Default text color */
+    overflow: hidden; /* Hide overflow */
+    text-align: center; /* Center align text */
+    text-wrap: nowrap; /* Prevent text wrap */
+    padding-right: 60vw; 
+}   
+
+

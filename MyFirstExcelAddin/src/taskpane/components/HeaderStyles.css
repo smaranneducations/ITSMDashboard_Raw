@@ -9,7 +9,13 @@
   .column {
     
     display: flex;
-    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent content overflow */
+  }
+
+  .NestedSubmenusControlled {
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
     overflow: hidden; /* Prevent content overflow */
   }
@@ -18,7 +24,7 @@
     width: 20vw; /* Ensure logo container takes full width */
     height: 10vh; /* Ensure logo container takes full height */
     display: flex;
-    justify-content: center;
+    justify-content:right;
     align-items: center;
   }
   
@@ -28,8 +34,12 @@
   }
   
   .message {
-    font-size: 5vw; /* Responsive font size based on viewport width */
-    font-weight: normal;
+    font-size: 1rem; /* Responsive font size based on viewport width */
+    font-weight: bold; /* Bold text */
     color: #333; /* Default text color */
-  }
+    overflow: hidden; /* Hide overflow */
+    text-align: center; /* Center align text */
+    text-wrap: nowrap; /* Prevent text wrap */
+      }
+  
   

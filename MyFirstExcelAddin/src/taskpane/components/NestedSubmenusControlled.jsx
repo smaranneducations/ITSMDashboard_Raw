@@ -116,7 +116,9 @@ const MasterDataSubMenu = () => {
       </MenuTrigger>
       <MenuPopover>
         <MenuList>
+        <Link to="/Scenario" style={{ textDecoration: "none" }}>
         <MenuItem> Scenario </MenuItem>
+        </Link>
         <MenuItem> Year  </MenuItem>
         <MenuItem> Accounts/GL </MenuItem>
         <MenuItem> Activities </MenuItem>
@@ -177,9 +179,7 @@ export const NestedSubmenusControlled = () => {
           <ReportsSubMenu />
           <SecuritySubMenu />
           <HashRouter>
-          <Link to="/test">
           <MenuItem> Approval workflows </MenuItem>
-          </Link>
           </HashRouter>
           <EPMEcosystemSubMenu />
         </MenuList>

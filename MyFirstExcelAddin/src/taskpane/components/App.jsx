@@ -1,21 +1,21 @@
 // App.jsx
 import React from "react";
-import Testcopy from "./testcopy"; // Correct the import path
 import { Switch, Route } from "react-router-dom";
-import Test123 from "./Test123";
+import Home from "./Home";
+import Scenario from "./Scenario";
 
 const App = () => {
   return (
     <div>
       <Switch>
-      <Route exact path="/">
-            <div><Testcopy title="bhasker" /></div>
+          <Route exact path="/">
+            <div><Home title="bhasker" /></div>
           </Route>
           <Route exact path="/home">
-            <div><Testcopy title="bhasker" /></div>
+            <div><Home title="bhasker" /></div>
           </Route>
-          <Route exact path="/test">
-            <div><Test123 /></div>
+          <Route exact path="/Scenario">
+            <div><Scenario /></div>
           </Route>
       </Switch>
     </div>

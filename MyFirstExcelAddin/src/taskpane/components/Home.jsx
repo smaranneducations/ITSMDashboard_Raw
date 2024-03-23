@@ -12,7 +12,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Testcopy = (props) => {
+const Home = (props) => {
   const styles = useStyles();
 
   const listItems = [
@@ -38,8 +38,8 @@ const Testcopy = (props) => {
   );
 };
 
-Testcopy.propTypes = {
+Home.propTypes = {
   title: PropTypes.string.isRequired,
 };
 
-export default Testcopy;
+export default Home;

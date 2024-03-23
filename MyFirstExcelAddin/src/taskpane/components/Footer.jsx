@@ -6,11 +6,6 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="column" style={{ width: '10vw' }}>
-      <HashRouter>
-          <Link to="/test">
-           Approval workflows 
-          </Link>
-          </HashRouter>
       </div>
     </footer>
   );

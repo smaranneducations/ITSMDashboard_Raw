@@ -10,17 +10,19 @@ const Header = (props) => {
   return (
     <section className="welcome__header">
       {/* Column 1: NestedSubmenusControlled */}
-      <div className="column NestedSubmenusControlled" style={{ width: "20%" , margin: "3%" }}>
+      <div className="column NestedSubmenusControlled" >
         <NestedSubmenusControlled />
       </div>
 
       {/* Column 2: Message */}
-      <div className="column" style={{ width: "60%" }}>
-        <h1 className="message">{message}</h1>
-      </div>
+<div className="column" >
+  <h1 className="message" >
+    {message}
+  </h1>
+</div>
 
       {/* Column 3: Logo */}
-      <div className="column" style={{ width: "20%", margin: "3%"  }}>
+      <div className="column" >
         <div className="logoContainer">
           <Image src={logo} alt={title} className="logo" />
         </div>

@@ -1,0 +1,45 @@
+.welcome__header {
+    display: flex;
+    align-items: center;
+    height: 10vh; /* Set initial height to 10vh */
+    background-color: #98c3e1; /* Light blue background color */
+    overflow: hidden; /* Prevent content overflow */
+  }
+  
+  .column {
+    
+    display: flex;
+    align-items: center;
+    overflow: hidden; /* Prevent content overflow */
+  }
+
+  .NestedSubmenusControlled {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    overflow: hidden; /* Prevent content overflow */
+  }
+  
+  .logoContainer {
+    width: 20vw; /* Ensure logo container takes full width */
+    height: 10vh; /* Ensure logo container takes full height */
+    display: flex;
+    justify-content:right;
+    align-items: center;
+  }
+  
+  .logo {
+    max-width: 100%; /* Ensure logo fits within container */
+    max-height: 100%; /* Ensure logo fits within container */
+  }
+  
+  .message {
+    font-size: 1rem; /* Responsive font size based on viewport width */
+    font-weight: bold; /* Bold text */
+    color: #333; /* Default text color */
+    overflow: hidden; /* Hide overflow */
+    text-align: center; /* Center align text */
+    text-wrap: nowrap; /* Prevent text wrap */
+      }
+  
+  

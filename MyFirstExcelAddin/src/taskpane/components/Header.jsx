@@ -1,31 +1,32 @@
-import * as React from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import { Image, tokens, makeStyles } from "@fluentui/react-components";
-
-const useStyles = makeStyles({
-  welcome__header: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    paddingBottom: "30px",
-    paddingTop: "100px",
-    backgroundColor: tokens.colorNeutralBackground3,
-  },
-  message: {
-    fontSize: tokens.fontSizeHero900,
-    fontWeight: tokens.fontWeightRegular,
-    fontColor: tokens.colorNeutralBackgroundStatic,
-  },
-});
+import { Image } from "@fluentui/react-components";
+import { NestedSubmenusControlled } from "./NestedSubmenusControlled";
+import "./HeaderStyles.css"; // Import CSS file for styles
 
 const Header = (props) => {
   const { title, logo, message } = props;
-  const styles = useStyles();
 
   return (
-    <section className={styles.welcome__header}>
-      <Image width="90" height="90" src={logo} alt={title} />
-      <h1 className={styles.message}>{message}</h1>
+    <section className="welcome__header">
+      {/* Column 1: NestedSubmenusControlled */}
+      <div className="column NestedSubmenusControlled" >
+        <NestedSubmenusControlled />
+      </div>
+
+      {/* Column 2: Message */}
+<div className="column" >
+  <h1 className="message" >
+    {message}
+  </h1>
+</div>
+
+      {/* Column 3: Logo */}
+      <div className="column" >
+        <div className="logoContainer">
+          <Image src={logo} alt={title} className="logo" />
+        </div>
+      </div>
     </section>
   );
 };

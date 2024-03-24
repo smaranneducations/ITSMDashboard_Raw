@@ -3,6 +3,7 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import Home from "./Home";
 import Scenario from "./Scenario";
+import Account from "./Account";
 
 const App = () => {
   return (
@@ -16,6 +17,9 @@ const App = () => {
           </Route>
           <Route exact path="/Scenario">
             <div><Scenario /></div>
+          </Route>
+          <Route exact path="/Account">
+            <div><Account /></div>
           </Route>
       </Switch>
     </div>

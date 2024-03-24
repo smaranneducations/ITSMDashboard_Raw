@@ -1,25 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import Header from './Header';
 import Footer from "./Footer";
-import { Button, Tooltip } from "@fluentui/react-components";
+import { Button, Tooltip, Dialog, DialogTrigger, DialogSurface, DialogTitle, DialogBody, DialogActions, DialogContent } from "@fluentui/react-components";
 import { ArrowCircleDownRegular, ArrowCircleUpRegular } from "@fluentui/react-icons";
-import "./Scenario.css";
+import "./Account.css"; // Import CSS file for styles
 import { defineScenarioTable } from '../clientLogic/Scenario/defineScenarioTable.js';
-import ConfirmationDialog from './ConfirmationDialog'; // Adjust the import path as necessary
-import { checkTableInNonScenarioSheets } from '../clientLogic/commonFunctions.js';
-
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const dialogResponse = useSelector((state) => state.dialog.response);
-
-    useEffect(() => {
-        if (dialogResponse) {
-            console.log("User response:", dialogResponse);
-            // Additional logic based on the response
-        }
-    }, [dialogResponse]);
 
     const handleDownButtonClick = async () => {
         try {
@@ -46,7 +34,7 @@ const Scenario = () => {
 
     return (
         <div>
-            <Header logo="assets/logo-filled.png" title="Contoso Task Pane Add-in" message="Scenario Table" />
+            <Header logo="assets/logo-filled.png" title="Contoso Task Pane Add-in" message="Account Table" />
             <div className="empty-data">hahahahah</div>
             <div className="edit-data">
                 <div className="box-text">
@@ -65,11 +53,23 @@ const Scenario = () => {
             </div>
             <Footer />
             
-            <ConfirmationDialog 
-                message="Are you sure you want to upload data?" 
-                isOpen={isDialogOpen} 
-                onOpenChange={setIsDialogOpen} 
-            />
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger>
+                    <Button style={{display: 'none'}}>Open Dialog</Button>
+                </DialogTrigger>
+                <DialogSurface>
+                    <DialogBody>
+                        <DialogTitle>Confirm Upload</DialogTitle>
+                        <DialogContent>
+                            Are you sure you want to upload data?
+                        </DialogContent>
+                        <DialogActions>
+                            <Button appearance="secondary" onClick={handleDialogClose}>Cancel</Button>
+                            <Button appearance="primary" onClick={handleConfirm}>Confirm</Button>
+                        </DialogActions>
+                    </DialogBody>
+                </DialogSurface>
+            </Dialog>
         </div>
     );
 };

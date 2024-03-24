@@ -120,7 +120,9 @@ const MasterDataSubMenu = () => {
         <MenuItem> Scenario </MenuItem>
         </Link>
         <MenuItem> Year  </MenuItem>
+        <Link to="/Account" style={{ textDecoration: "none" }}>
         <MenuItem> Accounts/GL </MenuItem>
+        </Link>
         <MenuItem> Activities </MenuItem>
         <MenuItem> Cost Centre </MenuItem>
         <MenuItem> Vendor </MenuItem>

@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { Dialog, DialogTrigger, DialogSurface, DialogTitle, DialogBody, DialogContent, Button } from "@fluentui/react-components";
-import { checkTableInNonScenarioSheets } from "./excelUtilities"; // Adjust the import path
+import { checkTableInNonTableNameSheets } from "../../../clientLogic/commonFunctions"; // Adjust the import path
 
-const YourComponent = () => {
+const TableInNonTableNameSheet = ({ context, tableName }) => { // Use props here
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogContent, setDialogContent] = useState('');
 
   const handleCheckTables = async () => {
-    // Example usage, you would get the context and tableName as needed
-    const context = {}; // Get your Excel context
-    const tableName = 'yourTableName';
-
-    const result = await checkTableInNonScenarioSheets(context, tableName);
+    // Use the context and tableName from props
+    const result = await checkTableInNonTableNameSheets(context, tableName);
     if (result.found) {
       setDialogContent(`In sheet ${result.sheetName}, table ${result.tableName} exists, which is wrong. The program will abort.`);
       setDialogOpen(true);
@@ -40,4 +37,4 @@ const YourComponent = () => {
   );
 };
 
-export default YourComponent;
+export default TableInNonTableNameSheet;

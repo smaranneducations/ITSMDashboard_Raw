@@ -2,7 +2,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { Button, Dialog, DialogTrigger, DialogSurface, DialogTitle, DialogBody, DialogActions, DialogContent } from "@fluentui/react-components";
-import { userResponse } from '../store/slices/dialogSlice'; // Update the import path as necessary
+import { userResponse } from '../../store/slices/dialogSlice'; // Update the import path as necessary
 
 const ConfirmationDialog = ({ message, isOpen, onOpenChange }) => {
   const dispatch = useDispatch();

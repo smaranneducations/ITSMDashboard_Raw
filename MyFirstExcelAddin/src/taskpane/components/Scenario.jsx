@@ -6,7 +6,7 @@ import { Button, Tooltip } from "@fluentui/react-components";
 import { ArrowCircleDownRegular, ArrowCircleUpRegular } from "@fluentui/react-icons";
 import "./Scenario.css";
 import { defineScenarioTable } from '../clientLogic/Scenario/defineScenarioTable.js';
-import ConfirmationDialog from './ConfirmationDialog'; // Adjust the import path as necessary
+import ConfirmationDialog from './generic/ConfirmationDialog'; // Adjust the import path as necessary
 import { checkTableInNonScenarioSheets } from '../clientLogic/commonFunctions.js';
 
 

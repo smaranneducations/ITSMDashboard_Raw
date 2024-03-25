@@ -1,21 +1,14 @@
 // ConfirmationDialog.jsx
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import { Button, Dialog, DialogTrigger, DialogSurface, DialogTitle, DialogBody, DialogActions, DialogContent } from "@fluentui/react-components";
-import { userResponse } from '../store/slices/dialogSlice'; // Update the import path as necessary
 
-const ConfirmationDialog = ({ message, isOpen, onOpenChange }) => {
-  const dispatch = useDispatch();
+
+const ConfirmationDialog1 = ({ message, isOpen, onOpenChange }) => {
 
   const handleConfirm = () => {
-    dispatch(userResponse('confirmed'));
     onOpenChange(false); // Close dialog
   };
 
-  const handleCancel = () => {
-    dispatch(userResponse('cancelled'));
-    onOpenChange(false); // Close dialog
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -29,7 +22,6 @@ const ConfirmationDialog = ({ message, isOpen, onOpenChange }) => {
             {message}
           </DialogContent>
           <DialogActions>
-            <Button appearance="secondary" onClick={handleCancel}>Cancel</Button>
             <Button appearance="primary" onClick={handleConfirm}>Confirm</Button>
           </DialogActions>
         </DialogBody>
@@ -38,4 +30,4 @@ const ConfirmationDialog = ({ message, isOpen, onOpenChange }) => {
   );
 };
 
-export default ConfirmationDialog;
+export default ConfirmationDialog1;

@@ -27,7 +27,7 @@ module.exports = async (env, options) => {
       clean: true,
     },
     resolve: {
-      extensions: [".html", ".js", ".jsx"],
+      extensions: [".html", ".js", ".jsx", ".ts"],
     },
     module: {
       rules: [

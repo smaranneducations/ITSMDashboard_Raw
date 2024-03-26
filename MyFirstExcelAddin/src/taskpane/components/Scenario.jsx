@@ -7,6 +7,7 @@ import { ArrowCircleDownRegular, ArrowCircleUpRegular } from "@fluentui/react-ic
 import "./Scenario.css";
 import ConfirmationDialog1 from './generic/ConfirmationDialog1';
 import { checkTableInNonTableNameSheets } from '../clientLogic/commonFunctions'; // Ensure this is correctly imported
+import  TableLineItemDetails  from './generic/TableLineItemDetails';
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -42,7 +43,18 @@ const Scenario = () => {
     return (
         <div>
             <Header logo="assets/logo-filled.png" title="Contoso Task Pane Add-in" message="Scenario Table" />
-            <div className="empty-data">sceanrio table</div>
+
+
+
+            <div className="empty-data">
+                <TableLineItemDetails
+                    documentContent="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos est quidem velit quas laboriosam. Nulla pariatur illum dolorem iste, atque dolores aliquam qui accusantium molestias eveniet nemo facere cupiditate quae!"
+                    conversationContent="Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque inventore corrupti ducimus sed eveniet ipsum amet veniam facere vel! Voluptatem id commodi ullam ipsam autem laudantium excepturi quisquam ea vitae."
+                    addinContent="Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores rerum natus omnis? Aperiam, dolorem commodi autem nostrum inventore ex tempore amet nesciunt! Aspernatur consequatur hic unde rerum officiis vero beatae."
+                />
+            </div>
+                
+
             <div className="edit-data">
                 <div className="box-text">
                     <h4>Edit data</h4>

@@ -16,8 +16,6 @@ const Scenario = () => {
     const officeContext = useContext(OfficeContext); // Use context here
 
     const handleDownButtonClick = async () => {
-        console.log('Checking for problematic tables...');
-        // Make sure to check if officeContext is defined before using it
         if (!officeContext) {
             console.error('Office context is not defined');
             return;
@@ -25,13 +23,13 @@ const Scenario = () => {
         
         const result = await checkTableInNonTableNameSheets(officeContext, "Scenario");
 
+
         if (result.found) {
-            const message = `In sheet ${result.sheetName}, a table named "${result.tableName}" exists, which is incorrect. Click Confirm to abort the operation.`;
+            const message = result.message;
             setDialogMessage(message);
             setIsDialogOpen(true);
         } else {
-            console.log('No problematic table found.');
-            console.log(result);        }
+            console.log('No problematic table found.');      }
     };
 
     // Handle user's acknowledgment (clicking OK in the dialog)

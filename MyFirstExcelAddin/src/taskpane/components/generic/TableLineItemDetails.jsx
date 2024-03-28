@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { IStyleSet, Label, ILabelStyles, Pivot, PivotItem } from '@fluentui/react';
-
+import ConversationContentComponent from './conversationContentComponent';
 const labelStyles = {
   root: { marginTop: 10, marginLeft: 10 ,marginBottom : 25},
-  "backgroundColor": "red",
+
 };
 
- const TableLineItemDetails = ({documentContent,conversationContent,addinContent}) => {
+ const TableLineItemDetails = ({documentContent,addinContent}) => {
   return (
     <Pivot aria-label="Basic Pivot Example">
       <PivotItem
@@ -19,7 +19,11 @@ const labelStyles = {
         <Label styles={labelStyles}>{documentContent}</Label>
       </PivotItem>
       <PivotItem headerText="Conversation">
-        <Label styles={labelStyles}>{conversationContent}</Label>
+        
+
+
+        <Label styles={labelStyles}><ConversationContentComponent /></Label>
+     
       </PivotItem>
       <PivotItem headerText="Addin">
         <Label styles={labelStyles}>{addinContent}</Label>

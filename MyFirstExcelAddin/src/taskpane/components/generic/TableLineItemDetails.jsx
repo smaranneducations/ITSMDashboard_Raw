@@ -2,7 +2,8 @@ import * as React from 'react';
 import { IStyleSet, Label, ILabelStyles, Pivot, PivotItem } from '@fluentui/react';
 
 const labelStyles = {
-  root: { marginTop: 10, marginLeft: 10 },
+  root: { marginTop: 10, marginLeft: 10 ,marginBottom : 25},
+  "backgroundColor": "red",
 };
 
  const TableLineItemDetails = ({documentContent,conversationContent,addinContent}) => {

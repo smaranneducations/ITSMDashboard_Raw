@@ -1,14 +1,14 @@
-.empty-data {
+.empty_data {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 40vh;
+    height: 75vh;
     border-top: 1px solid black; /* Thin black border on top */
-    background-color: #88b2cf; /* Light blue background */
+    background-color: #e5ecf1; /* Light blue background */
     
 }
 
-.edit-data {
+.edit_data {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -22,16 +22,16 @@
     
 }
 
-.download-button {
+.download_button {
  justify-self: flex-end;
  padding-right: 5vw;
  
 }
-.upload-button{
+.upload_button{
     justify-self: flex-end;
     padding-right: 5vw;
 }
-.box-text {
+.box_text {
     font-size: 1rem; /* Responsive font size based on viewport width */
     font-weight: bold; /* Bold text */
     color: #0b0101; /* Default text color */
@@ -40,5 +40,3 @@
     text-wrap: nowrap; /* Prevent text wrap */
     padding-right: 60vw; 
 }   
-
-

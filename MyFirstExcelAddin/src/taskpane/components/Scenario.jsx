@@ -4,7 +4,8 @@ import Header from './Header';
 import Footer from "./Footer";
 import { Button, Tooltip } from "@fluentui/react-components";
 import { ArrowCircleDownRegular, ArrowCircleUpRegular } from "@fluentui/react-icons";
-import "./Scenario.css";
+import styles from "./Scenario.module.css";
+
 import ConfirmationDialog1 from './generic/ConfirmationDialog1';
 import { checkTableInNonTableNameSheets } from '../clientLogic/commonFunctions'; // Ensure this is correctly imported
 import  TableLineItemDetails  from './generic/TableLineItemDetails';
@@ -46,7 +47,7 @@ const Scenario = () => {
 
 
 
-            <div className="empty-data">
+            <div className={styles.empty_data}>
                 <TableLineItemDetails
                     documentContent="Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos est quidem velit quas laboriosam. Nulla pariatur illum dolorem iste, atque dolores aliquam qui accusantium molestias eveniet nemo facere cupiditate quae!"
                     conversationContent="Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque inventore corrupti ducimus sed eveniet ipsum amet veniam facere vel! Voluptatem id commodi ullam ipsam autem laudantium excepturi quisquam ea vitae."
@@ -55,16 +56,16 @@ const Scenario = () => {
             </div>
                 
 
-            <div className="edit-data">
-                <div className="box-text">
+            <div className={styles.edit_data}>
+                <div className={styles.box_text}>
                     <h4>Edit data</h4>
                 </div>
-                <div className="upload-button">
+                <div className={styles.upload_button}>
                     <Tooltip content="Retrieve data from database" relationship="label">
                         <Button size="large" icon={<ArrowCircleDownRegular />} onClick={handleDownButtonClick} />
                     </Tooltip>
                 </div>
-                <div className="download-button">
+                <div className={styles.download_button}>
                     <Tooltip content="Upload data back to database" relationship="label">
                         <Button size="large" icon={<ArrowCircleUpRegular />} />
                     </Tooltip>

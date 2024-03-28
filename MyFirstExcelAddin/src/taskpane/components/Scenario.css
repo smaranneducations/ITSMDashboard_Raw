@@ -3,8 +3,9 @@
     flex-direction: column;
     align-items: center;
     height: 75vh;
-    border-top: 1px solid black; /* Thin black border on top */
-    background-color: #e5ecf1; /* Light blue background */
+    width: 100vw;
+    border-top: 10px solid black; /* Thin black border on top */
+    background-color: #236b9f; /* Light blue background */
     
 }
 

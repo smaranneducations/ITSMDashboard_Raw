@@ -7,6 +7,7 @@ import { ArrowCircleDownRegular, ArrowCircleUpRegular } from "@fluentui/react-ic
 import styles from "./Scenario.module.css";
 
 import ConfirmationDialog1 from './generic/ConfirmationDialog1';
+import DownloadDataDialog from './generic/DownloadDataDialog';
 import { checkTableInNonTableNameSheets } from '../clientLogic/commonFunctions'; // Ensure this is correctly imported
 import  TableLineItemDetails  from './generic/TableLineItemDetails';
 import { initializeComponentRef } from '@fluentui/react';
@@ -15,6 +16,9 @@ import { downloadScenarioTable } from '../clientLogic/Scenario/downloadScenarioT
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState("");
+    const [downloadDataDialogIsOpen, setDownloadDataDialogIsOpen] = useState(false);
+    const [downloadDataDialogMessage, setDownloadDataDialogMessage] = useState("");
+
     const officeContext = useContext(OfficeContext); // Use context here
 
     const handleDownButtonClick = async () => {
@@ -30,9 +34,11 @@ const Scenario = () => {
             const message = result.message;
             setDialogMessage(message);
             setIsDialogOpen(true);
-        } else {
-            console.log('No issues found');
+        } else if (result.message === "Sheet does not exist"){
+            console.log("Sheet does not exist");
             const result1 = await downloadScenarioTable (officeContext, "Scenario");  }
+        else if (result.message === "sheet exists and table setup is correct"){
+            console.log("sheet exists and table setup is correct")};
     };
 
     // Handle user's acknowledgment (clicking OK in the dialog)
@@ -76,6 +82,14 @@ const Scenario = () => {
             
             {isDialogOpen && (
                 <ConfirmationDialog1 
+                    message={dialogMessage} 
+                    isOpen={isDialogOpen} 
+                    onOpenChange={handleDialogOk} // Simplified
+                />
+            )}
+
+            {isDialogOpen && (
+                <DownloadDataDialog 
                     message={dialogMessage} 
                     isOpen={isDialogOpen} 
                     onOpenChange={handleDialogOk} // Simplified

@@ -14,7 +14,6 @@ export const downloadScenarioTable = async (context, tableName) => {
         let sheet = sheets.items.find(sheet => sheet.name === tableName);
         
         if (!sheet) {
-          console.log('Sheet does not exist, creating a new one');
           sheet = sheets.add(tableName);
           let expensesTable = sheet.tables.add("A5:I5", true /*hasHeaders*/);
           expensesTable.name = tableName;
@@ -24,26 +23,8 @@ export const downloadScenarioTable = async (context, tableName) => {
           await localContext.sync();
 
           const rows = data.map(item => [item.ScenarioCode, item.ScenarioOpen, item.ScenarioName, item.ScenarioDescription, item.UD1, item.UD2, item.UD3, item.DocAttachments,'=IF(COUNTIF([ScenarioName],[@ScenarioName])>1,"No","Yes")']);
-          for (const row of rows) {
-            console.log('Adding Row:', row);
-            expensesTable.rows.add(null, [row]);
-          }
-          } else {
-            const sheetTables = sheet.tables;
-            sheetTables.load("items,name");
-            await localContext.sync();
-            let sheetTable = null;
-            sheetTable = sheetTables.items.find(table => table.name === tableName);
-              if (sheetTable) {
-                const tableRows = sheetTable.rows;
-                tableRows.load("count");
-                await localContext.sync();
-                const rowCount = tableRows.count;
-                console.log("Number of records in the table:", rowCount);
-                  } else {
-                 console.log('Table does not exist, creating a new one');
-                        }
-          }
+          expensesTable.rows.add(null,rows);
+        }
       } catch (excelError) {
         console.error("Excel operation failed:", excelError);
       }

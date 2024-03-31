@@ -2,7 +2,7 @@ export const checkTableInNonTableNameSheets = async (context, tableName) => {
     const result = await Excel.run(async (context) => {
         let tableinwrongsheet = null;
         let tablesetupwrog = null;
-        let finalmessage = null;
+
         const sheets = context.workbook.worksheets;
         sheets.load("items,name");
         await context.sync();
@@ -28,17 +28,19 @@ export const checkTableInNonTableNameSheets = async (context, tableName) => {
                     const topLeftCell = table.getRange().load("address");
                     await context.sync();
 
-                    if (sheetTables.items.length === 1 && table.name === tableName && topLeftCell.address.split('!')[1].split(':')[0] !== "A5") {
-                        /* tablecountwrong =  `In sheet "${sheet.name}" Only one table can exist and its name should be "${sheet.name}". you have "${sheetTables.items.length}" tables ` ; */
+                    if (sheetTables.items.length === 1 && table.name === tableName && topLeftCell.address.split('!')[1].split(':')[0] == "A5") {
+                        return { found: false, message: "nothing wrong found" };
                     } else {
                         tablesetupwrog = `Setup of "${sheet.name}" is wrong. It can have only one table with name "${sheet.name}" and it has to start from A5.`;
                     }
                 }
             }
         }
-        finalmessage = "--" + tableinwrongsheet + "<br>" + "--" + tablesetupwrog
-        console.log(finalmessage);
-        return { found: true, message: finalmessage };
+        if (tableinwrongsheet === null && tablesetupwrog === null) {
+            return { found: false, message: "nothing wrong found" };
+        }else{
+        console.log(tableinwrongsheet + "/n" + tablesetupwrog);
+        return { found: true, message: tableinwrongsheet + "/n" + tablesetupwrog };}
     });
     return result;
 };

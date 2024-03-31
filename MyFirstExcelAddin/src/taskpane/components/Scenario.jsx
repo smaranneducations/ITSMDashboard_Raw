@@ -9,6 +9,8 @@ import styles from "./Scenario.module.css";
 import ConfirmationDialog1 from './generic/ConfirmationDialog1';
 import { checkTableInNonTableNameSheets } from '../clientLogic/commonFunctions'; // Ensure this is correctly imported
 import  TableLineItemDetails  from './generic/TableLineItemDetails';
+import { initializeComponentRef } from '@fluentui/react';
+import { downloadScenarioTable } from '../clientLogic/Scenario/downloadScenarioTable';
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -29,7 +31,8 @@ const Scenario = () => {
             setDialogMessage(message);
             setIsDialogOpen(true);
         } else {
-            console.log('No problematic table found.');      }
+            console.log('No issues found');
+            const result1 = await downloadScenarioTable (officeContext, "Scenario");  }
     };
 
     // Handle user's acknowledgment (clicking OK in the dialog)
@@ -37,7 +40,7 @@ const Scenario = () => {
         setIsDialogOpen(false);
         // Abort the program or take appropriate action here
         console.log("Operation aborted by the user.");
-    };
+    }; 
 
     return (
         <div>

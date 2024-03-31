@@ -6,7 +6,7 @@ import { Button, Dialog, DialogTrigger, DialogSurface, DialogTitle, DialogBody, 
 const ConfirmationDialog1 = ({ message, isOpen, onOpenChange }) => {
 
   const handleConfirm = () => {
-    onOpenChange(false); // Close dialog
+    onOpenChange(); // Close dialog
   };
 
 

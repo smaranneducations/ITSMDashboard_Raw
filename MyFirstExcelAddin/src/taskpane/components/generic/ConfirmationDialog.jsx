@@ -26,11 +26,15 @@ const ConfirmationDialog = ({ message, isOpen, onOpenChange }) => {
         <DialogBody>
           <DialogTitle>Confirm Action</DialogTitle>
           <DialogContent>
-            {message}
+            {message} 4
+
+
+            4
+            
           </DialogContent>
           <DialogActions>
-            <Button appearance="secondary" onClick={handleCancel}>Cancel</Button>
-            <Button appearance="primary" onClick={handleConfirm}>Confirm</Button>
+            <Button appearance="secondary" onClick={handleCancel}>Merge</Button>
+            <Button appearance="primary" onClick={handleConfirm}>Reset</Button>
           </DialogActions>
         </DialogBody>
       </DialogSurface>

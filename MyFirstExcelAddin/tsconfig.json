@@ -1,6 +1,7 @@
 {
   "compilerOptions    ": {
     "allowJs": true,
+    "noEmit":  true ,
     "allowUnusedLabels": false,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
@@ -24,11 +25,16 @@
     ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "Scripts/Office/1"
   ],
   "compileOnSave": false,
   "buildOnSave": false,
   "ts-node": { 
     "files": true 
-  }
+  },
+  "typeAcquisition": {
+    "enable": true,             // Enable automatic fetching of type definitions for detected JavaScript libraries.
+    "include": [ "office-js" ]  // Ensure that the "Office-js" type definition is fetched.
+}
 }

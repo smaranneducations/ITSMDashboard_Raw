@@ -54,7 +54,7 @@
     "@babel/preset-typescript": "^7.13.0",
     "@types/es6-collections": "^0.5.29",
     "@types/mssql": "^9.1.5",
-    "@types/office-js": "^1.0.256",
+    "@types/office-js": "^1.0.378",
     "@types/office-runtime": "^1.0.23",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",

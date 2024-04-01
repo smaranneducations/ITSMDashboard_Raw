@@ -2,13 +2,24 @@ import axios from 'axios';
 
 export const updateOrAddScenarioRecords = async (context, tableName) => {
   console.log("Updating or adding scenario records...");
-  try {
+
     const response = await axios.get(`http://localhost:3001/api/fetchdata/${tableName}`);
     const apiData = response.data;
 
     await Excel.run(async (localContext) => {
       const sheet = localContext.workbook.worksheets.getItem(tableName);
       const table = sheet.tables.getItem(tableName);
+
+      // Remove any existing color formatting
+      const tableRange= table.getRange();
+      console.log(tableRange);
+      const tableFormat = tableRange.format;
+      console.log("2");
+      tableFormat.fill.color = null;
+      console.log("3");
+      return localContext.sync();
+      format.fill.color = "#4472C4";
+
       const tableRows = table.rows;
       tableRows.load("items/values");
       await localContext.sync();
@@ -25,8 +36,10 @@ export const updateOrAddScenarioRecords = async (context, tableName) => {
                 // Update cell color to yellow and add original value as a comment
                 const cell = table.columns.getItemAt(cellIndex).getDataBodyRange().getCell(index, 0);
                 cell.format.fill.color = "yellow";
-                cell.comments.add(`${cellValue}`);
                 cell.values = [[apiValue]];
+                cell.setNote(`${cellValue}`);
+                //cell.values = [[apiValue]];
+                
               }
             });
           }
@@ -42,7 +55,5 @@ export const updateOrAddScenarioRecords = async (context, tableName) => {
         await localContext.sync();
       });
     });
-  } catch (error) {
-    console.error("Failed to update or add scenario records:", error);
-  }
+  
 };

@@ -10,8 +10,9 @@ import ConfirmationDialog1 from './generic/ConfirmationDialog1';
 import DownloadDataDialog from './generic/DownloadDataDialog';
 import { checkTableInNonTableNameSheets } from '../clientLogic/commonFunctions'; // Ensure this is correctly imported
 import  TableLineItemDetails  from './generic/TableLineItemDetails';
-import { initializeComponentRef } from '@fluentui/react';
 import { downloadScenarioTable } from '../clientLogic/Scenario/downloadScenarioTable';
+import { downloadScenarioTableInfo } from '../clientLogic/Scenario/downloadScenarioTableInfo';
+import { updateOrAddScenarioRecords } from '../clientLogic/Scenario/updateOrAddScenarioRecords';
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -36,9 +37,14 @@ const Scenario = () => {
             setIsDialogOpen(true);
         } else if (result.message === "Sheet does not exist"){
             console.log("Sheet does not exist");
-            const result1 = await downloadScenarioTable (officeContext, "Scenario");  }
-        else if (result.message === "sheet exists and table setup is correct"){
-            console.log("sheet exists and table setup is correct")};
+            await downloadScenarioTable (officeContext, "Scenario");
+        } else if (result.message === "sheet exists and table setup is correct"){
+            console.log("sheet exists and table setup is correct");
+            const result1 = await downloadScenarioTableInfo (officeContext, "Scenario");
+            setDownloadDataDialogIsOpen(true);
+            setDownloadDataDialogMessage("Do you want to merge or reset the data? Excel " + result1.info1);
+            
+        }
     };
 
     // Handle user's acknowledgment (clicking OK in the dialog)
@@ -48,11 +54,24 @@ const Scenario = () => {
         console.log("Operation aborted by the user.");
     }; 
 
+    //Handle user response on merge or reset
+    const handleUserResponseDownloadDataDialog = async (downloadDataDialogIsOpen, action) => {
+        setDownloadDataDialogIsOpen(downloadDataDialogIsOpen);
+        if (action === 'merge') {
+            // Merge data
+            console.log("Merging data...");
+           
+            await updateOrAddScenarioRecords(officeContext, "Scenario");
+            
+        } else if (action === 'reset') {
+            // Reset data
+            console.log("Resetting data...");
+        }
+    };
+
     return (
         <div>
             <Header logo="assets/logo-filled.png" title="Contoso Task Pane Add-in" message="Scenario Table" />
-
-
 
             <div className={styles.empty_data}>
                 <TableLineItemDetails
@@ -62,7 +81,6 @@ const Scenario = () => {
                 />
             </div>
                 
-
             <div className={styles.edit_data}>
                 <div className={styles.box_text}>
                     <h4>Edit data</h4>
@@ -84,15 +102,15 @@ const Scenario = () => {
                 <ConfirmationDialog1 
                     message={dialogMessage} 
                     isOpen={isDialogOpen} 
-                    onOpenChange={handleDialogOk} // Simplified
+                    onOpenChange={handleDialogOk} 
                 />
             )}
 
-            {isDialogOpen && (
+            {downloadDataDialogIsOpen && (
                 <DownloadDataDialog 
-                    message={dialogMessage} 
-                    isOpen={isDialogOpen} 
-                    onOpenChange={handleDialogOk} // Simplified
+                    downloadDataDialogIsOpen={downloadDataDialogIsOpen}
+                    downloadDataDialogMessage={downloadDataDialogMessage}
+                    onOpenChangeDataDialog={handleUserResponseDownloadDataDialog} 
                 />
             )}
         </div>

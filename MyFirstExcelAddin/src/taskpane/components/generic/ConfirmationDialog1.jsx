@@ -3,10 +3,10 @@ import React from 'react';
 import { Button, Dialog, DialogTrigger, DialogSurface, DialogTitle, DialogBody, DialogActions, DialogContent } from "@fluentui/react-components";
 
 
-const ConfirmationDialog1 = ({ message, isOpen, onOpenChange }) => {
+const ConfirmationDialog = ({ message, isOpen, onOpenChange }) => {
 
   const handleConfirm = () => {
-    onOpenChange(false); // Close dialog
+    onOpenChange(); // Close dialog
   };
 
 
@@ -30,4 +30,4 @@ const ConfirmationDialog1 = ({ message, isOpen, onOpenChange }) => {
   );
 };
 
-export default ConfirmationDialog1;
+export default ConfirmationDialog;

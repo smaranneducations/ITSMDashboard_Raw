@@ -24,8 +24,8 @@ export const checkTableInNonTableNameSheets = async (context, tableName) => {
                 const sheetTables = sheet.tables;
                 sheetTables.load("items,name,rows");
                 await context.sync();
-                
-                if (sheetTables.items.length === 1){
+
+                if (sheetTables.items.length === 1) {
                     const topLeftCell = sheetTables.items[0].getRange().load("address");
                     await context.sync();
                     if (sheetTables.items[0].name == tableName && topLeftCell.address.split('!')[1].split(':')[0] == "A5") {
@@ -35,14 +35,18 @@ export const checkTableInNonTableNameSheets = async (context, tableName) => {
                         console.log("should enter here as there is no table in the sheet ");
                         tablesetupwrog = `Setup of "${sheet.name}" is wrong. It can have only one table with name "${sheet.name}" and it has to start from A5.`;
                     }
+                } else {
+                    tablesetupwrog = `"${sheet.name}" exists but has no table delete the sheet and run donwload again`;
                 }
-                return { found: true, message: `"${sheet.name}" exists but has no table delete the sheet and run donwload again` };
             }
         }
         if (tableinwrongsheet === null && tablesetupwrog === null) {
             return { found: false, message: sheetExists };
         } else {
-            return { found: true, message: tableinwrongsheet + "\n" + tablesetupwrog };
+            return { 
+                found: true, 
+                message: `${tableinwrongsheet}\n${tablesetupwrog}` 
+            };
         }
     });
     return result;

@@ -19,7 +19,7 @@ const ConfirmationDialog = ({ message, isOpen, onOpenChange }) => {
         <DialogBody>
           <DialogTitle>Confirm Action</DialogTitle>
           <DialogContent>
-            {message}
+          <div style={{color: 'red', whiteSpace: 'pre-wrap'}}>{message}</div>
           </DialogContent>
           <DialogActions>
             <Button appearance="primary" onClick={handleConfirm}>Confirm</Button>

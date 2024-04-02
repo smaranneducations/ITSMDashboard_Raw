@@ -1,1 +1,5 @@
-{}
+{
+  "devDependencies": {
+    "@types/office-js": "^1.0.378"
+  }
+}

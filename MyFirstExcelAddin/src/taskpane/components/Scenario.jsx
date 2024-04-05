@@ -5,7 +5,6 @@ import Footer from "./Footer";
 import { Button, Tooltip } from "@fluentui/react-components";
 import { ArrowCircleDownRegular, ArrowCircleUpRegular } from "@fluentui/react-icons";
 import styles from "./Scenario.module.css";
-
 import ConfirmationDialog1 from './generic/ConfirmationDialog1';
 import DownloadDataDialog from './generic/DownloadDataDialog';
 import { checkTableInNonTableNameSheets } from '../clientLogic/commonFunctions'; // Ensure this is correctly imported
@@ -13,6 +12,8 @@ import  TableLineItemDetails  from './generic/TableLineItemDetails';
 import { downloadScenarioTable } from '../clientLogic/Scenario/downloadScenarioTable';
 import { downloadScenarioTableInfo } from '../clientLogic/Scenario/downloadScenarioTableInfo';
 import { updateOrAddScenarioRecords } from '../clientLogic/Scenario/updateOrAddScenarioRecords';
+import { resetScenarioRecords } from '../clientLogic/Scenario/resetScenarioRecords';
+import { upsertScenarioTable } from '../clientLogic/Scenario/upsertScenarioTable';
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -47,6 +48,17 @@ const Scenario = () => {
         }
     };
 
+    const handleUpButtonClick = async () => {
+        if (!officeContext) {
+            console.error('Office context is not defined');
+            return;
+        }
+        
+        const result = await upsertScenarioTable(officeContext, "Scenario");
+        console.log(result);
+
+    };
+
     // Handle user's acknowledgment (clicking OK in the dialog)
     const handleDialogOk = () => {
         setIsDialogOpen(false);
@@ -66,6 +78,7 @@ const Scenario = () => {
         } else if (action === 'reset') {
             // Reset data
             console.log("Resetting data...");
+            await resetScenarioRecords(officeContext, "Scenario");
         }
     };
 
@@ -92,7 +105,7 @@ const Scenario = () => {
                 </div>
                 <div className={styles.download_button}>
                     <Tooltip content="Upload data back to database" relationship="label">
-                        <Button size="large" icon={<ArrowCircleUpRegular />} />
+                        <Button size="large" icon={<ArrowCircleUpRegular />} onClick={handleUpButtonClick} />
                     </Tooltip>
                 </div>
             </div>

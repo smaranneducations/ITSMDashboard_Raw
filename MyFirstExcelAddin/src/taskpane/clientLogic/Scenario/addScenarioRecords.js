@@ -1,58 +1,46 @@
-// think about the approach on how can we debug and find out what is being talked about in the stackoverflow link
-
-import axios from 'axios';
-
-export const addScenarioRecords = async (localContext, tableName) => {
+export const addScenarioRecords = async (context, tableName, code) => {
     try {
-        // Fetch the latest data
-        const response = await axios.get("http://localhost:3001/api/fetchdata/Scenario");
-        const apiData = response.data;
-
         await Excel.run(async (context) => {
+            context.application.calculationMode = Excel.CalculationMode.manual;
+            context.application.load("calculationMode");
+            await context.sync();
+            // Get the specified worksheet and table
             const sheet = context.workbook.worksheets.getItem(tableName);
             const table = sheet.tables.getItem(tableName);
 
-            // Remove any existing color formatting
-            table.getRange().format.fill.clear();
-            await context.sync();
+            // Temporarily unprotect the sheet
+            sheet.protection.unprotect('Welcome123!');
 
-            // Remove any existing comments
-            sheet.comments.load('items');
-            await context.sync();
-            sheet.comments.items.forEach(comment => comment.delete());
-            await context.sync();
-
-            const tableRows = table.rows.load("items");
-            await context.sync();
+            // Load necessary properties for the table and current selection
+            table.load('columns/items');
+            const selection = context.workbook.getSelectedRange();
+            selection.load('rowIndex');
             
-            //https://stackoverflow.com/a/63407912/13561843
-            for (let i = tableRows.items.length -1; i >= 0; i--) {
-                tableRows.items[i].delete();
+            // Ensure the loaded properties are available for use
+            await context.sync();
+
+            // Calculate the selected row's position relative to the table
+            const tableRange = table.getRange();
+            tableRange.load('rowCount, rowIndex');
+            await context.sync();
+            const selectedRowIndex = selection.rowIndex - tableRange.rowIndex;
+
+            // Validate if the selected row is within the table range
+            if (selectedRowIndex >= 0 && selectedRowIndex < tableRange.rowCount) {
+                // Prepare and insert the specified number of blank rows at the selected position
+                const blankRowTemplate = [Array(table.columns.items.length).fill(null)];
+                for (let i = 0; i < code; i++) {
+                    table.rows.add(selectedRowIndex, blankRowTemplate);
+                }
             }
+
+            // Reapply protection to the sheet
+            sheet.protection.protect({ allowAutoFilter: true, allowSort: true }, 'Welcome123!');
+            context.application.calculationMode = Excel.CalculationMode.automatic;
+            context.application.load("calculationMode");
             await context.sync();
-            
-
-            // Repopulate the table with new data
-            const newValues = apiData.map(item => [
-                item.ScenarioCode, 
-                item.ScenarioOpen, 
-                item.ScenarioName, 
-                item.ScenarioDescription, 
-                item.UD1, 
-                item.UD2, 
-                item.UD3, 
-                item.DocAttachments,
-                '=IF(COUNTIF([ScenarioName],[@ScenarioName])>1,"No","Yes")'
-            ]);
-
-            // Add new rows to the table
-            table.rows.add(null, newValues);
-            await context.sync();
-
-            // Optionally, apply any specific formatting to the newly added rows here.
-
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error modifying scenario records: ", error);
     }
 };

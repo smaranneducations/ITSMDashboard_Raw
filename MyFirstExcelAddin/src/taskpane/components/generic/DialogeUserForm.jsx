@@ -30,12 +30,12 @@ const DialogeUserForm = ({ isDialogeUserFormOpen, setIsDialogeUserFormOpen, hand
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
-    handleDialogeUserFormRecordNumber(code); // Pass the code to the handler
+    handleDialogeUserFormRecordNumber(code, false, "insert record" ); 
   };
 
   // Function to close the dialog without performing any action
   const handleClose = () => {
-    setIsDialogeUserFormOpen(false);
+    handleDialogeUserFormRecordNumber(code, false, "close prompt" );
   };
 
   const handleCodeChange = (ev) => {

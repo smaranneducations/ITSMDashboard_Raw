@@ -3,9 +3,8 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   ThumbLike24Regular,
   ThumbDislike24Regular,
-  ArrowCircleUp18Filled,
-  ArrowCircleDown18Filled,
 } from "@fluentui/react-icons";
+import axios from  "axios"
 const Comment = ({ handleInsertNode, handleEditNode, handleDeleteNode, comment }) => {
   const [input, setInput] = useState("");
   const [editMode, setEditMode] = useState(false);
@@ -75,12 +74,13 @@ const Comment = ({ handleInsertNode, handleEditNode, handleDeleteNode, comment }
     setShowInput(true);
   };
 
-  const onAddComment = () => {
+  const onAddComment = async() => {
     if (editMode) {
       handleEditNode(comment.id, inputRef?.current?.innerText);
     } else {
       setExpand(true);
-      handleInsertNode(comment.id, input);
+
+          handleInsertNode(comment.id, input);
       setShowInput(false);
       setInput("");
     }
@@ -88,9 +88,8 @@ const Comment = ({ handleInsertNode, handleEditNode, handleDeleteNode, comment }
     if (editMode) setEditMode(false);
   };
 
-  const handleDelete = () => {
-    handleDeleteNode(comment.id);
-  };
+  const handleDelete = async() => 
+            handleDeleteNode(comment.id);
   const Action = ({ handleClick, icon, type, className }) => {
     return (
       <div className={className} onClick={handleClick}>
@@ -111,6 +110,7 @@ const Comment = ({ handleInsertNode, handleEditNode, handleDeleteNode, comment }
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="type..."
+              autoFocus
             />
             <Action className="reply comment" type="COMMENT" handleClick={onAddComment} />
           </>

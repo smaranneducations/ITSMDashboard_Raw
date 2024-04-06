@@ -15,6 +15,9 @@ try {
     const sheet = localContext.workbook.worksheets.getItem(tableName);
     const table = sheet.tables.getItem(tableName);
 
+    sheet.protection.unprotect( 'Welcome123!');
+    await localContext.sync();
+
     // Remove any existing color formatting
     table.getRange().format.fill.clear();
     // Remove any existing comments
@@ -84,7 +87,7 @@ try {
             // Once done with the object, it's a good practice to remove it from tracked objects to free resources
             localContext.trackedObjects.remove(addedRowRange);
           }
-
+          sheet.protection.protect({allowAutoFilter: true, allowSort: true }, 'Welcome123!');
           await localContext.sync();
         }
       });

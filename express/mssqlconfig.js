@@ -7,9 +7,9 @@ console.log('user', user);
 console.log(typeof (user)); */
 
 const mssqlconfig = {
-    user: "admin" ,
+    user: "jaihanuman" ,
     password: "Welcome123!",
-    server: "localhost",
+    server: "itsmdashboard1.database.windows.net",
     database: "ITSMDashboard",
     options: {
         trustedConnection: false, // Change to true if using Windows authentication

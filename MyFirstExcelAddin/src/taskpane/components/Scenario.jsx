@@ -3,9 +3,8 @@ import OfficeContext from '../OfficeContext'; // Adjust the import path as neces
 import Header from './Header';
 import Footer from "./Footer";
 import { Button, Tooltip } from "@fluentui/react-components";
-import { ArrowCircleDownRegular, ArrowCircleUpRegular } from "@fluentui/react-icons";
+import { ArrowCircleDownRegular, ArrowCircleUpRegular,DeleteDismissRegular,AddCircleRegular } from "@fluentui/react-icons";
 import styles from "./Scenario.module.css";
-
 import ConfirmationDialog1 from './generic/ConfirmationDialog1';
 import DownloadDataDialog from './generic/DownloadDataDialog';
 import { checkTableInNonTableNameSheets } from '../clientLogic/commonFunctions'; // Ensure this is correctly imported
@@ -13,12 +12,17 @@ import  TableLineItemDetails  from './generic/TableLineItemDetails';
 import { downloadScenarioTable } from '../clientLogic/Scenario/downloadScenarioTable';
 import { downloadScenarioTableInfo } from '../clientLogic/Scenario/downloadScenarioTableInfo';
 import { updateOrAddScenarioRecords } from '../clientLogic/Scenario/updateOrAddScenarioRecords';
+import { resetScenarioRecords } from '../clientLogic/Scenario/resetScenarioRecords';
+import { upsertScenarioTable } from '../clientLogic/Scenario/upsertScenarioTable';
+import DialogeUserForm from './generic/DialogeUserForm';
+import {addScenarioRecords} from '../clientLogic/Scenario/addScenarioRecords';
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [dialogMessage, setDialogMessage] = useState("");
     const [downloadDataDialogIsOpen, setDownloadDataDialogIsOpen] = useState(false);
     const [downloadDataDialogMessage, setDownloadDataDialogMessage] = useState("");
+    const [isDialogeUserFormOpen, setIsDialogeUserFormOpen] = useState(false);
 
     const officeContext = useContext(OfficeContext); // Use context here
 
@@ -47,6 +51,53 @@ const Scenario = () => {
         }
     };
 
+    const handleUpButtonClick = async () => {
+        if (!officeContext) {
+            console.error('Office context is not defined');
+            return;
+        }
+        
+        const result = await upsertScenarioTable(officeContext, "Scenario");
+        console.log(result);
+
+    };
+
+    const handleDialogeUserFormRecordNumber = async (code, booleanValue, actionString) => {
+        setIsDialogeUserFormOpen(booleanValue); // This will always close the dialog based on the booleanValue provided
+        if (actionString === "insert record") {
+          console.log("Code entered by the user: ", code);
+          setIsDialogeUserFormOpen(false);
+          const result = await addScenarioRecords(officeContext, "Scenario", code);
+          console.log("Number of records added to the table: ", result);
+        } else if (actionString === "close prompt") {
+            setIsDialogeUserFormOpen(false);
+            console.log("Operation aborted by the user.");
+        }
+      };
+      
+
+    const handleAddButtonClick = async () => {
+        if (!officeContext) {
+            console.error('Office context is not defined');
+            return;
+        }
+        
+        setIsDialogeUserFormOpen(true);
+        console.log("Add button clicked");
+
+    };
+
+    const handleDeleteButtonClick = async () => {
+        if (!officeContext) {
+            console.error('Office context is not defined');
+            return;
+        }
+        
+        const result = await upsertScenarioTable(officeContext, "Scenario");
+        console.log(result);
+
+    };
+
     // Handle user's acknowledgment (clicking OK in the dialog)
     const handleDialogOk = () => {
         setIsDialogOpen(false);
@@ -66,6 +117,7 @@ const Scenario = () => {
         } else if (action === 'reset') {
             // Reset data
             console.log("Resetting data...");
+            await resetScenarioRecords(officeContext, "Scenario");
         }
     };
 
@@ -85,6 +137,16 @@ const Scenario = () => {
                 <div className={styles.box_text}>
                     <h4>Edit data</h4>
                 </div>
+                <div className={styles.addRecord_button}>
+                    <Tooltip content="Add records to the excel table" relationship="label">
+                        <Button size="large" icon={<AddCircleRegular />} onClick={handleAddButtonClick} />
+                    </Tooltip>
+                </div>
+                <div className={styles.deleteRecord_button}>
+                    <Tooltip content="Delete records from the table" relationship="label">
+                        <Button size="large" icon={<DeleteDismissRegular />} onClick={handleDeleteButtonClick} />
+                    </Tooltip>
+                </div>
                 <div className={styles.upload_button}>
                     <Tooltip content="Retrieve data from database" relationship="label">
                         <Button size="large" icon={<ArrowCircleDownRegular />} onClick={handleDownButtonClick} />
@@ -92,7 +154,7 @@ const Scenario = () => {
                 </div>
                 <div className={styles.download_button}>
                     <Tooltip content="Upload data back to database" relationship="label">
-                        <Button size="large" icon={<ArrowCircleUpRegular />} />
+                        <Button size="large" icon={<ArrowCircleUpRegular />} onClick={handleUpButtonClick} />
                     </Tooltip>
                 </div>
             </div>
@@ -111,6 +173,13 @@ const Scenario = () => {
                     downloadDataDialogIsOpen={downloadDataDialogIsOpen}
                     downloadDataDialogMessage={downloadDataDialogMessage}
                     onOpenChangeDataDialog={handleUserResponseDownloadDataDialog} 
+                />
+            )}
+
+            {setIsDialogeUserFormOpen && (
+                <DialogeUserForm 
+                    isDialogeUserFormOpen={isDialogeUserFormOpen}
+                    handleDialogeUserFormRecordNumber={handleDialogeUserFormRecordNumber} 
                 />
             )}
         </div>

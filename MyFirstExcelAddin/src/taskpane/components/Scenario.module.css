@@ -22,6 +22,18 @@
     
 }
 
+.deleteRecord_button {
+    justify-self: flex-end;
+    padding-right: 5vw;
+    
+   }
+
+   .addRecord_button {
+    justify-self: flex-end;
+    padding-right: 5vw;
+    
+   }
+
 .download_button {
  justify-self: flex-end;
  padding-right: 5vw;
@@ -38,5 +50,5 @@
     overflow: hidden; /* Hide overflow */
     text-align: center; /* Center align text */
     text-wrap: nowrap; /* Prevent text wrap */
-    padding-right: 60vw; 
+    padding-right: 40vw; 
 }   

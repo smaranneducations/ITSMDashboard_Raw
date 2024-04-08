@@ -5,6 +5,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import { Ribbon24Regular, LockOpen24Regular, DesignIdeas24Regular } from "@fluentui/react-icons";
 import { makeStyles } from "@fluentui/react-components";
+import { HomeBody } from "./HomeBody";
 
 const useStyles = makeStyles({
   root: {
@@ -33,6 +34,7 @@ const Home = (props) => {
   return (
     <div className={styles.root}>
       <Header logo="assets/logo-filled.png" title={props.title} message="ITSM Dashboard" />
+      <HomeBody />
       <Footer />
     </div>
   );

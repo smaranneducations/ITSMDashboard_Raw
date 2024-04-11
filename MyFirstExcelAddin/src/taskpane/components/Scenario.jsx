@@ -17,7 +17,8 @@ import { upsertScenarioTable } from '../clientLogic/Scenario/upsertScenarioTable
 import DialogeUserForm from './generic/DialogeUserForm';
 import DeleteDataDialog from './generic/DeleteDataDialog';  
 import {addScenarioRecords} from '../clientLogic/Scenario/addScenarioRecords';
-import { deleteScenarioRecords } from '../clientLogic/Scenario/deleteScenarioRecords';  
+import { deleteScenarioRecords } from '../clientLogic/Scenario/deleteScenarioRecords'; 
+import { deleteScenarioDBRecords } from '../clientLogic/Scenario/deleteScenarioDBRecords';
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -108,7 +109,12 @@ const Scenario = () => {
                 break;
             case 'DeleteInDB':
                 console.log('Delete in Database button clicked');
-                // Logic to delete data in the database
+                result12345555 = await deleteScenarioDBRecords(officeContext, "Scenario");
+                console.log("result------")
+                console.log("result", result.response)
+                console.log("result.response.message", result.response.message)
+                console.log("result.response.scenarioDatainDBtobeDeleted", result.response.scenarioDatainDBtobeDeleted)
+
                 break;
             default:
                 console.log('Unknown action');

@@ -31,7 +31,6 @@ async function fetchData(tableName) {
         await sql.connect(mssqlconfig);
         const query = `SELECT * FROM ${tableName}`;
         const result = await sql.query(query);
-        console.log('Fetched data:', result.recordset);
         return result.recordset;
     } catch (err) {
         throw err;
@@ -91,4 +90,43 @@ async function insertOrUpdateRecord_Sceanrio(tableName, records) {
 }
 
 
-export  { getColumnNames, fetchData, insertOrUpdateRecord_Sceanrio };
+
+
+async function deleteRecordsByScenarioCode(tableName, scenarioCodes) {
+    let deletedCount = 0;
+    let statusText = '';
+    let err = '';
+
+    try {
+        await sql.connect(mssqlconfig);
+        for (let scenarioCode of scenarioCodes) {
+            // Prepend the USE statement to ensure the correct database context
+            const useDatabase = `USE [ITSMDashboard];`;
+
+            // Construct and execute the delete query
+            const queryDelete = `${useDatabase} DELETE FROM ${tableName} WHERE ScenarioCode = '${scenarioCode}'`;
+            const result = await sql.query(queryDelete);
+
+            // Check if a record was deleted
+            if (result.rowsAffected[0] > 0) {
+                deletedCount++;
+            }
+        }
+
+        statusText = `${deletedCount} records deleted successfully.`;
+    } catch (error) {
+        err = error.message; // Capture and log the error message
+        console.error("Error:", err);
+    } finally {
+        console.log(statusText);
+        await sql.close();
+        // Return both statusText and err (if any error occurred)
+        return { statusText, err };
+    }
+}
+
+// Example usage
+// deleteRecordsByScenarioCode('YourTableName', ['ScenarioCode1', 'ScenarioCode2']);
+
+
+export  { getColumnNames, fetchData, insertOrUpdateRecord_Sceanrio, deleteRecordsByScenarioCode};

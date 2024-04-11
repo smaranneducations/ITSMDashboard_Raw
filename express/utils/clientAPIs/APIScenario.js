@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { getColumnNames,fetchData, insertOrUpdateRecord_Sceanrio } from '../databaseCRUD/CRUDScenario.js';
+import { getColumnNames,fetchData, insertOrUpdateRecord_Sceanrio, deleteRecordsByScenarioCode } from '../databaseCRUD/CRUDScenario.js';
 
 
 const ScenarioRouter = express.Router();
@@ -43,6 +43,25 @@ ScenarioRouter.post('/api/insertorupdaterecord_Scenario/:tableName',bodyParser.j
     res.status(200).json(response); // Send the response
   } catch (error) {
     res.status(500).send(error.message); 
+  }
+});
+
+ScenarioRouter.post('/api/deleteRecordsByScenarioCode/:tableName', bodyParser.json(), async (req, res) => {
+  try {
+    const tableName = req.params.tableName;
+    const scenarioCodes = req.body.scenarioCodes; // Expecting an array of ScenarioCodes in the request body
+
+    // Call the delete function
+    const { statusText, err } = await deleteRecordsByScenarioCode(tableName, scenarioCodes);
+
+    if (err) {
+      throw new Error(err);
+    }
+
+    // Prepare and send the response
+    res.status(200).json({ message: statusText });
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 

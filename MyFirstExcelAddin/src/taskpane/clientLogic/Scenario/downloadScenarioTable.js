@@ -20,7 +20,7 @@ export const downloadScenarioTable = async (context, tableName) => {
           expensesTable.name = tableName;
           expensesTable.getHeaderRowRange().values = [["ScenarioCode", "ScenarioOpen", "ScenarioName", "ScenarioDescription", "UD1", "UD2", "UD3", "DocAttachments","IsUnique"]];
           sheet.freezePanes.freezeRows(5);
-          expensesTable.columns.getItem("ScenarioOpen").getDataBodyRange().dataValidation.rule = { list: { inCellDropDown: true, source: ["Open", "closed"].join(",") } };
+          expensesTable.columns.getItem("ScenarioOpen").getDataBodyRange().dataValidation.rule = { list: { inCellDropDown: true, source: ["Open", "Closed"].join(",") } };
           
           await localContext.sync();
 

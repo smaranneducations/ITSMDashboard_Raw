@@ -15,7 +15,11 @@ import { updateOrAddScenarioRecords } from '../clientLogic/Scenario/updateOrAddS
 import { resetScenarioRecords } from '../clientLogic/Scenario/resetScenarioRecords';
 import { upsertScenarioTable } from '../clientLogic/Scenario/upsertScenarioTable';
 import DialogeUserForm from './generic/DialogeUserForm';
+import DeleteDataDialog from './generic/DeleteDataDialog';
+import DeleteDataInDBDialog from './generic/DeleteDataInDBDialog';  
 import {addScenarioRecords} from '../clientLogic/Scenario/addScenarioRecords';
+import { deleteScenarioRecords } from '../clientLogic/Scenario/deleteScenarioRecords'; 
+import { deleteScenarioDBRecords,deleteScenarioDBRecords1 } from '../clientLogic/Scenario/deleteScenarioDBRecords';
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -23,6 +27,12 @@ const Scenario = () => {
     const [downloadDataDialogIsOpen, setDownloadDataDialogIsOpen] = useState(false);
     const [downloadDataDialogMessage, setDownloadDataDialogMessage] = useState("");
     const [isDialogeUserFormOpen, setIsDialogeUserFormOpen] = useState(false);
+    const [deleteDataDialogIsOpen, setDeleteDataDialogIsOpen] = useState(false);
+    const [deleteDataDialogMessage, setDeleteDataDialogMessage] = useState('');
+    const [DeleteDataInDBDialogOpen, setDeleteDataInDBDialogOpen] = useState(false);
+    const [DeleteDataInDBDialogMessage, setDeleteDataInDBDialogMessage] = useState('');
+    const [DeleteScenarioDBRecordsresult, setDeleteScenarioDBRecordsresult] = useState(null); // Initialize the state variable
+   
 
     const officeContext = useContext(OfficeContext); // Use context here
 
@@ -58,8 +68,9 @@ const Scenario = () => {
         }
         
         const result = await upsertScenarioTable(officeContext, "Scenario");
-        console.log(result);
-
+        const { statusText, err } = result.rowsAffected;
+        const message = err === "" ? statusText : err;
+        console.log(message);
     };
 
     const handleDialogeUserFormRecordNumber = async (code, booleanValue, actionString) => {
@@ -86,6 +97,62 @@ const Scenario = () => {
         console.log("Add button clicked");
 
     };
+      
+
+    const onOpenChangeDeleteDataDialog = async (isOpen, actionType) => {
+        setDeleteDataDialogIsOpen(isOpen); // Always update dialog visibility based on the isOpen argument
+    
+        switch (actionType) {
+            case 'Cancel':
+                console.log('Cancel button clicked');
+                // Handle Cancel action here
+                break;
+            case 'DeleteInExcel':
+                console.log('Delete in Excel button clicked');
+                await deleteScenarioRecords(officeContext, "Scenario");
+                // Logic to delete data in Excel
+                break;
+            case 'DeleteInDB':
+                console.log('Delete in Database button clicked');
+                try {
+                    const deleteScenarioDBRecordsresult = await deleteScenarioDBRecords(officeContext, "Scenario");
+                    setDeleteDataInDBDialogOpen(true);
+                    setDeleteDataInDBDialogMessage(deleteScenarioDBRecordsresult.message);
+                    setDeleteScenarioDBRecordsresult(deleteScenarioDBRecordsresult); // Store the result in the state variable
+                    //console.log(JSON.stringify(deleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted));
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+
+                break;
+            default:
+                console.log('Unknown action');
+                // Handle any unknown actions
+        }
+    };
+    
+    const handleDeleteDataInDBDialogOk = async (isOpen, action,DeleteScenarioDBRecordsresult) => {
+        setDeleteDataInDBDialogOpen(isOpen); // Always update dialog visibility based on the isOpen argument
+      
+        if (action === 'Confirm') {
+           setDeleteDataInDBDialogOpen(isOpen);
+          console.log('DeleteDataInDBDialogOk button confirmed');
+          console.log("stringifiedoutput ",DeleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted);
+          const result = await deleteScenarioDBRecords1("Scenario", DeleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted);
+          if (result.err) {
+            console.error("Error deleting scenario records: ", result.err);
+          } else {
+           
+            console.log("Scenario records deleted successfully.", result.data.message);
+           
+          }
+          
+        } else if (action === 'Cancel') {
+           setDeleteDataInDBDialogOpen(isOpen);
+          console.log('DeleteDataInDBDialogOk button canceled');
+          // Handle the cancel action here
+        }
+      };
 
     const handleDeleteButtonClick = async () => {
         if (!officeContext) {
@@ -93,8 +160,7 @@ const Scenario = () => {
             return;
         }
         
-        const result = await upsertScenarioTable(officeContext, "Scenario");
-        console.log(result);
+        setDeleteDataDialogIsOpen(true);
 
     };
 
@@ -118,7 +184,9 @@ const Scenario = () => {
             // Reset data
             console.log("Resetting data...");
             await resetScenarioRecords(officeContext, "Scenario");
-        }
+        }else if (action === 'cancel') {
+        console.log("DownloadData operation cancelled by the user");
+    }
     };
 
     return (
@@ -159,6 +227,15 @@ const Scenario = () => {
                 </div>
             </div>
             <Footer />
+
+            {DeleteDataInDBDialogOpen && (
+                <DeleteDataInDBDialog 
+                    message={DeleteDataInDBDialogMessage} 
+                    isOpen={DeleteDataInDBDialogOpen} 
+                    onOpenChange={handleDeleteDataInDBDialogOk}
+                    DeleteScenarioDBRecordsresult={DeleteScenarioDBRecordsresult} 
+                />
+            )}
             
             {isDialogOpen && (
                 <ConfirmationDialog1 
@@ -176,10 +253,17 @@ const Scenario = () => {
                 />
             )}
 
-            {setIsDialogeUserFormOpen && (
+            {isDialogeUserFormOpen && (
                 <DialogeUserForm 
                     isDialogeUserFormOpen={isDialogeUserFormOpen}
                     handleDialogeUserFormRecordNumber={handleDialogeUserFormRecordNumber} 
+                />
+            )}
+            {deleteDataDialogIsOpen && (
+                <DeleteDataDialog 
+                    deleteDataDialogIsOpen={deleteDataDialogIsOpen}
+                    deleteDataDialogMessage={"choose from the options below"} 
+                    onOpenChangeDeleteDataDialog={onOpenChangeDeleteDataDialog}
                 />
             )}
         </div>

@@ -24,24 +24,28 @@
 
 .deleteRecord_button {
     justify-self: flex-end;
-    padding-right: 5vw;
+    padding-right: 2vw;
+    width : 10vw;
     
    }
 
    .addRecord_button {
     justify-self: flex-end;
-    padding-right: 5vw;
+    padding-right: 2vw;
+    width : 10vw;
     
    }
 
 .download_button {
  justify-self: flex-end;
- padding-right: 5vw;
+ padding-right: 2vw;
+ width : 10vw;
  
 }
 .upload_button{
-    justify-self: flex-end;
-    padding-right: 5vw;
+    justify-self: flex-start;
+    padding-right: 2vw;
+    width : 10vw;
 }
 .box_text {
     font-size: 1rem; /* Responsive font size based on viewport width */
@@ -50,5 +54,8 @@
     overflow: hidden; /* Hide overflow */
     text-align: center; /* Center align text */
     text-wrap: nowrap; /* Prevent text wrap */
-    padding-right: 40vw; 
+    width : 30vw;
+    padding-right: 22vw;
+    justify-self: flex-start;
+    justify-content: flex-start;
 }   

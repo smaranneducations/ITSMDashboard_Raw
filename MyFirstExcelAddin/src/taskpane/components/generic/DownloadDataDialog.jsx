@@ -13,6 +13,10 @@ const DownloadDataDialog = ({ downloadDataDialogIsOpen, downloadDataDialogMessag
     onOpenChangeDataDialog(false, 'reset'); // Indicate action "reset"
   };
 
+  const handleCancel = () => {
+    onOpenChangeDataDialog(false, 'cancel'); // Indicate action "reset"
+  };
+
   return (
     <Dialog open={downloadDataDialogIsOpen} onOpenChangeDataDialog={onOpenChangeDataDialog}>
       <DialogTrigger>
@@ -25,6 +29,7 @@ const DownloadDataDialog = ({ downloadDataDialogIsOpen, downloadDataDialogMessag
             {downloadDataDialogMessage}
           </DialogContent>
           <DialogActions>
+            <Button appearance="secondary" onClick={handleCancel}>Cancel</Button>
             <Button appearance="secondary" onClick={handleMerge}>Merge</Button>
             <Button appearance="primary" onClick={handleReset}>Reset</Button>
           </DialogActions>

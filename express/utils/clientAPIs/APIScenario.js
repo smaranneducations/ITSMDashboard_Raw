@@ -49,7 +49,8 @@ ScenarioRouter.post('/api/insertorupdaterecord_Scenario/:tableName',bodyParser.j
 ScenarioRouter.post('/api/deleteRecordsByScenarioCode/:tableName', bodyParser.json(), async (req, res) => {
   try {
     const tableName = req.params.tableName;
-    const scenarioCodes = req.body.scenarioCodes; // Expecting an array of ScenarioCodes in the request body
+    const scenarioCodes = req.body; // Expecting an array of ScenarioCodes in the request body
+    console.log('scenarioCodes:', scenarioCodes);
 
     // Call the delete function
     const { statusText, err } = await deleteRecordsByScenarioCode(tableName, scenarioCodes);

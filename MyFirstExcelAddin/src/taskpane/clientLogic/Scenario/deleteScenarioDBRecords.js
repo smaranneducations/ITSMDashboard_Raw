@@ -5,7 +5,6 @@ function normalizeValue(value) {
 }
 
 export const deleteScenarioDBRecords = async (context, tableName) => {
-    console.log('deleteScenarioDBRecords');
     try {
         let scenarioDatainDB = [];
         let scenarioDatainDBtobeDeleted = [];
@@ -68,16 +67,32 @@ export const deleteScenarioDBRecords = async (context, tableName) => {
 
             sheet.protection.protect({ allowAutoFilter: true, allowSort: true }, 'Welcome123!'); // Reapply protection to the sheet.
             context.application.calculationMode = Excel.CalculationMode.automatic; // Restore calculation mode to automatic.
+            return "bhasker";
         });
 
         // Print the collected scenario data as JSON
         //console.log(`below scenario codes will be deleted from the sheet "${allscenarioData}" \n below scenario codes will be deleted from the DB "${scenarioDatainDB}"`);
         //console.log('scenarioDatainDBtobeDeleted', scenarioDatainDB);
-        let message = `below scenario codes will be deleted from the sheet "${allscenarioData}" \n below scenario codes will be deleted from the DB "${scenarioDatainDB}"`;
-        console.log(message);
-        console.log(scenarioDatainDBtobeDeleted);
-        return "bhasker";
+        let message = `below scenario codes will be deleted from the sheet \n "${allscenarioData.join('\n')}" \n below scenario codes will be deleted from the DB \n "${scenarioDatainDB.join('\n')}"`;
+        return {scenarioDatainDBtobeDeleted:scenarioDatainDBtobeDeleted, message:message};
     } catch (error) {
         console.error("Error deleting scenario records: ", error); // Log any errors encountered during execution.
+    }
+};
+
+export const deleteScenarioDBRecords1 = async (tableName, returnObjects) => {
+    try {
+        // Here you send the JSON.stringify(returnObjects) via axios
+        const response = await axios.post(`http://localhost:3001/api/deleteRecordsByScenarioCode/${tableName}`, JSON.stringify(returnObjects), {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log('response iside the deleteScenarioDBRecords1:', response);
+        console.log('response iside the deleteScenarioDBRecords1:', response.data.message);
+        return response.data.message;
+
+    } catch (error) {
+        console.error("Error deleting scenario records from DB: ", error); // Log any errors encountered during execution.
     }
 };

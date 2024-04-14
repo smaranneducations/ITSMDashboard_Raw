@@ -1,16 +1,28 @@
 // src/store/slices/apiScenarioSlice.js
-import { createApi } from '@reduxjs/toolkit/query/react' // note import { createApi } from '@reduxjs/toolkit/query' will give error store_slices_apiScenarioSlice_js__WEBPACK_IMPORTED_MODULE_1_.useGetScenarioData) is not a function
-import { fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const apiSlice = createApi({
+  reducerPath: 'apiScenario',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/api' }),
   endpoints: (builder) => ({
+    // Query endpoint for getting scenario data
     getScenarioData: builder.query({
       query: () => '/fetchdata/Scenario',
+    }),
+    // Mutation endpoint for upserting scenario data
+    upsertScenarioRecordInDB: builder.mutation({
+      query: ({ tableName, data }) => ({
+        url: `/insertorupdaterecord_Scenario/${tableName}`,
+        method: 'POST',
+        body: data,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }),
     }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetScenarioDataQuery } = apiSlice;
+export const { useGetScenarioDataQuery, useUpsertScenarioRecordInDBMutation } = apiSlice;

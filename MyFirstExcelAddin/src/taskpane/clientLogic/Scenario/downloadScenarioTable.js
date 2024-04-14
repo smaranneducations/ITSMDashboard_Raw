@@ -1,9 +1,14 @@
 import axios from 'axios';
 
-export const downloadScenarioTable = async (context, tableName) => {
+export const downloadScenarioTable = async (apiData,context, tableName) => {
+  if (!apiData) {
+    console.error('No data provided to reset scenario records');
+    return;
+  }
+
   try {
-    const response = await axios.get(`http://localhost:3001/api/fetchdata/${tableName}`);
-    const data = response.data;
+    
+    const data = apiData;
 
     const result = await Excel.run(async (localContext) => {
       try {

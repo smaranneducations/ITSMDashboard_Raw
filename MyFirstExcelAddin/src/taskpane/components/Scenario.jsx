@@ -20,6 +20,8 @@ import DeleteDataInDBDialog from './generic/DeleteDataInDBDialog';
 import {addScenarioRecords} from '../clientLogic/Scenario/addScenarioRecords';
 import { deleteScenarioRecords } from '../clientLogic/Scenario/deleteScenarioRecords'; 
 import { deleteScenarioDBRecords,deleteScenarioDBRecords1 } from '../clientLogic/Scenario/deleteScenarioDBRecords';
+import { useGetScenarioDataQuery } from '../store/slices/apiScenarioSlice.js'
+
 
 const Scenario = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -32,8 +34,10 @@ const Scenario = () => {
     const [DeleteDataInDBDialogOpen, setDeleteDataInDBDialogOpen] = useState(false);
     const [DeleteDataInDBDialogMessage, setDeleteDataInDBDialogMessage] = useState('');
     const [DeleteScenarioDBRecordsresult, setDeleteScenarioDBRecordsresult] = useState(null); // Initialize the state variable
-   
+    const { data: scenarioData, isLoading, error,refetch } = useGetScenarioDataQuery(); 
+  // Use RTK Query hook thsi line is the one which gives error
 
+    console.log("Scenario Data: ", scenarioData);
     const officeContext = useContext(OfficeContext); // Use context here
 
     const handleDownButtonClick = async () => {
@@ -43,7 +47,7 @@ const Scenario = () => {
         }
         
         const result = await checkTableInNonTableNameSheets(officeContext, "Scenario");
-
+        refetch();
 
         if (result.found) {
             const message = result.message;
@@ -51,7 +55,7 @@ const Scenario = () => {
             setIsDialogOpen(true);
         } else if (result.message === "Sheet does not exist"){
             console.log("Sheet does not exist");
-            await downloadScenarioTable (officeContext, "Scenario");
+            await downloadScenarioTable (scenarioData, officeContext, "Scenario");
         } else if (result.message === "sheet exists and table setup is correct"){
             console.log("sheet exists and table setup is correct");
             const result1 = await downloadScenarioTableInfo (officeContext, "Scenario");
@@ -183,7 +187,7 @@ const Scenario = () => {
         } else if (action === 'reset') {
             // Reset data
             console.log("Resetting data...");
-            await resetScenarioRecords(officeContext, "Scenario");
+            await resetScenarioRecords(scenarioData, officeContext, "Scenario");
         }else if (action === 'cancel') {
         console.log("DownloadData operation cancelled by the user");
     }

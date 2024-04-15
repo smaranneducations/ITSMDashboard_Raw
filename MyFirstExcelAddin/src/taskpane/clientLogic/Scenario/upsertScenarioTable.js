@@ -1,4 +1,3 @@
-import axios from 'axios';
 
 const upsertScenarioTable = async (context, tableName) => {
   try {

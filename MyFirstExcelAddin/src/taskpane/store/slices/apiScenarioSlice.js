@@ -20,9 +20,20 @@ export const apiSlice = createApi({
         },
       }),
     }),
+    // New mutation endpoint to delete scenario records from the database
+    deleteScenarioInDBRecords: builder.mutation({
+      query: ({ tableName, scenarioCodes }) => ({
+          url: `/deleteRecordsByScenarioCode/${tableName}`,
+          method: 'POST',
+          body: JSON.stringify(scenarioCodes),
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      }),
+  }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetScenarioDataQuery, useUpsertScenarioRecordInDBMutation } = apiSlice;
+export const { useGetScenarioDataQuery, useUpsertScenarioRecordInDBMutation, useDeleteScenarioInDBRecordsMutation } = apiSlice;

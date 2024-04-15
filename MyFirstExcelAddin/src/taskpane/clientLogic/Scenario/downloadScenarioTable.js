@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 
 export const downloadScenarioTable = async (apiData,context, tableName) => {
   if (!apiData) {
@@ -43,7 +43,7 @@ export const downloadScenarioTable = async (apiData,context, tableName) => {
           expensesTable.columns.getItemAt(8).getDataBodyRange().format.fill.color = "#FFBE33"; */
 
           [0, 2, 7, 8].forEach(index => expensesTable.columns.getItemAt(index).getDataBodyRange().format.fill.color = "#FFBE33");
-
+          [2].forEach(index => expensesTable.columns.getItemAt(index).getDataBodyRange().format.autofitColumns());
           
           sheet.protection.protect({allowAutoFilter: true, allowSort: true }, 'Welcome123!');
           await localContext.sync();

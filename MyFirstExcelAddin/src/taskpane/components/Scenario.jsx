@@ -19,8 +19,9 @@ import DeleteDataDialog from './generic/DeleteDataDialog';
 import DeleteDataInDBDialog from './generic/DeleteDataInDBDialog';  
 import {addScenarioRecords} from '../clientLogic/Scenario/addScenarioRecords';
 import { deleteScenarioRecords } from '../clientLogic/Scenario/deleteScenarioRecords'; 
-import { deleteScenarioDBRecords,deleteScenarioDBRecords1 } from '../clientLogic/Scenario/deleteScenarioDBRecords';
-import { useGetScenarioDataQuery, useUpsertScenarioRecordInDBMutation } from '../store/slices/apiScenarioSlice.js'
+import { deleteScenarioDBRecords } from '../clientLogic/Scenario/deleteScenarioDBRecords';
+import { useGetScenarioDataQuery, useUpsertScenarioRecordInDBMutation,useDeleteScenarioInDBRecordsMutation } from '../store/slices/apiScenarioSlice.js'
+import { checkBeforeUploadScenario } from '../clientLogic/Scenario/checkBeforeUploadScenario';  
 
 
 const Scenario = () => {
@@ -36,10 +37,11 @@ const Scenario = () => {
     const [DeleteScenarioDBRecordsresult, setDeleteScenarioDBRecordsresult] = useState(null); // Initialize the state variable
     const { data: scenarioData, isLoading, error,refetch } = useGetScenarioDataQuery(); 
     const [upsertScenarioRecordInDB] = useUpsertScenarioRecordInDBMutation();
+    const [deleteScenarioInDBRecords] = useDeleteScenarioInDBRecordsMutation();
 
   // Use RTK Query hook thsi line is the one which gives error
 
-    console.log("Scenario Data-----------: ", scenarioData);
+/* console.log("Scenario Data: ", scenarioData); */
     const officeContext = useContext(OfficeContext); // Use context here
 
     const handleDownButtonClick = async () => {
@@ -72,25 +74,26 @@ const Scenario = () => {
             console.error('Office context is not defined');
             return;
         }
-        
+        const resultCheckBeforeUploadScenario = await checkBeforeUploadScenario(scenarioData, officeContext, "Scenario")
+        if (resultCheckBeforeUploadScenario.err) {
+            setDialogMessage(`Error uploading scenario records:. ${resultCheckBeforeUploadScenario.err}`);
+            setIsDialogOpen(true);
+          } else if (resultCheckBeforeUploadScenario === "Not Valid") {
+            setDialogMessage(`Check the Validation line you have invlaid reecords upload aborteded`);
+            setIsDialogOpen(true);
+          } else if (resultCheckBeforeUploadScenario === "Valid") {
+          
         const result = await upsertScenarioTable(officeContext, "Scenario");
-        console.log ("Result from upsertScenarioTable: ", result);
-        /* Result from upsertScenarioTable:  [{"ScenarioCode":1037,"ScenarioOpen":"Open","ScenarioName":"bububu","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_11","UD2":"","UD3":"","DocAttachments":1,"IsUnique":"Yes"},{"ScenarioCode":1038,"ScenarioOpen":"Open","ScenarioName":"Actual_new14","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_11","UD2":"","UD3":"","DocAttachments":1,"IsUnique":"Yes"},{"ScenarioCode":1057,"ScenarioOpen":"Open","ScenarioName":"Actual_new150","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_12","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1058,"ScenarioOpen":"Open","ScenarioName":"Actual_new151","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_13","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1059,"ScenarioOpen":"Open","ScenarioName":"Actual_new152","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_14","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1060,"ScenarioOpen":"Open","ScenarioName":"Actual_new153","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_15","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1061,"ScenarioOpen":"Open","ScenarioName":"Actual_new154","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_16","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1067,"ScenarioOpen":"Open","ScenarioName":"Actual_new160","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_22","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1068,"ScenarioOpen":"Open","ScenarioName":"bhasker12345","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_23","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1069,"ScenarioOpen":"Open","ScenarioName":"bhasker12346","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_24","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1070,"ScenarioOpen":"Open","ScenarioName":"bhasker12347","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_25","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1071,"ScenarioOpen":"Open","ScenarioName":"bhasker12348","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_26","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1072,"ScenarioOpen":"Open","ScenarioName":"bhasker12349","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_27","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1073,"ScenarioOpen":"Open","ScenarioName":"Sandeep1","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_28","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1074,"ScenarioOpen":"Open","ScenarioName":"Sandeep2","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_29","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1075,"ScenarioOpen":"Open","ScenarioName":"Sandeep3","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_30","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1076,"ScenarioOpen":"Open","ScenarioName":"Sandeep4","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_31","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1077,"ScenarioOpen":"Open","ScenarioName":"Sandeep5","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_32","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1078,"ScenarioOpen":"Open","ScenarioName":"Sandeep6","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_33","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"},{"ScenarioCode":1079,"ScenarioOpen":"Open","ScenarioName":"Sandeep7","ScenarioDescription":"Forecast Scenario","UD1":"bhasker_34","UD2":"","UD3":"","DocAttachments":0,"IsUnique":"Yes"}] */
-        
-            try {
-                console.log('Saving data...');
-              const resultupsertScenarioRecordInDB = await upsertScenarioRecordInDB({tableName: 'Scenario', data: result}).unwrap();
-              console.log('Saving data...1', result);
-              if (result.data) {
-                console.log('Data successfully saved:', result.data);
-              } else if (result.error) {
-                console.error('Failed to save data:', result.error);
-              }
-            } catch (error) {
-              console.error('Error saving data:', error);
-            }
-          ;
-
+        const resultupsertScenarioRecordInDB = await upsertScenarioRecordInDB({tableName: 'Scenario', data: result}).unwrap();
+        console.log("upsertScenarioRecordInDB", resultupsertScenarioRecordInDB);
+        if (resultupsertScenarioRecordInDB.err) {
+            setDialogMessage(`Error uploading scenario records:. ${resultupsertScenarioRecordInDB.err}`);
+            setIsDialogOpen(true);
+          } else {
+            setDialogMessage(`Scenario records uploaded successfully. ${resultupsertScenarioRecordInDB.rowsAffected.statusText}`);
+            setIsDialogOpen(true);
+          }
+        }
         const { statusText, err } = upsertScenarioRecordInDB.rowsAffected;
         const message = err === "" ? statusText : err;
         console.log("upsertScenarioRecordInDB", message);
@@ -159,15 +162,15 @@ const Scenario = () => {
       
         if (action === 'Confirm') {
            setDeleteDataInDBDialogOpen(isOpen);
-          console.log('DeleteDataInDBDialogOk button confirmed');
-          console.log("stringifiedoutput ",DeleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted);
-          const result = await deleteScenarioDBRecords1("Scenario", DeleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted);
-          if (result.err) {
-            console.error("Error deleting scenario records: ", result.err);
+          /* const result = await deleteScenarioDBRecords1("Scenario", DeleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted); */
+          const resultDeleteScenarioDBRecords = await deleteScenarioInDBRecords({tableName: 'Scenario', scenarioCodes: DeleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted}).unwrap();
+          await deleteScenarioRecords(officeContext, "Scenario");
+          if (resultDeleteScenarioDBRecords.err) {
+            setDialogMessage(`Error deleting scenario records:. ${resultDeleteScenarioDBRecords.err}`);
+            setIsDialogOpen(true);
           } else {
-           
-            console.log("Scenario records deleted successfully.", result.data.message);
-           
+            setDialogMessage(`Scenario records deleted successfully. ${resultDeleteScenarioDBRecords.message}`);
+            setIsDialogOpen(true);
           }
           
         } else if (action === 'Cancel') {
@@ -184,6 +187,7 @@ const Scenario = () => {
         }
         
         setDeleteDataDialogIsOpen(true);
+        const result = await upsertScenarioTable(officeContext, "Scenario");
 
     };
 
@@ -201,7 +205,7 @@ const Scenario = () => {
             // Merge data
             console.log("Merging data...");
            
-            await updateOrAddScenarioRecords(officeContext, "Scenario");
+            await updateOrAddScenarioRecords(scenarioData, officeContext, "Scenario");
             
         } else if (action === 'reset') {
             // Reset data

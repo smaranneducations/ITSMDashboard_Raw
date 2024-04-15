@@ -43,7 +43,7 @@ export const resetScenarioRecords = async (apiData, localContext, tableName) => 
       table.rows.add(null, newValues);
       await context.sync();
 
-      [7, 0, 8].forEach(col => table.columns.getItemAt(col).getDataBodyRange().format.fill.color = "#FFBE33");
+      [0,2,7, 8].forEach(col => table.columns.getItemAt(col).getDataBodyRange().format.fill.color = "#FFBE33");
 
       sheet.protection.protect({ allowAutoFilter: true, allowSort: true }, 'Welcome123!');
       context.application.calculationMode = Excel.CalculationMode.automatic;

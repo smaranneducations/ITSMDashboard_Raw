@@ -1,4 +1,3 @@
-import axios from 'axios';
 
 const upsertScenarioTable = async (context, tableName) => {
   try {
@@ -27,20 +26,8 @@ const upsertScenarioTable = async (context, tableName) => {
         returnObjects = returnObjectFromValues(values, columnNames);
       }
     });
-
-    console.log("returnObjects:", JSON.stringify(returnObjects));
-
-    // Here you send the JSON.stringify(returnObjects) via axios
-    const response = await axios.post(`http://localhost:3001/api/insertorupdaterecord_Scenario/${tableName}`, JSON.stringify(returnObjects), {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    console.log("Response from the server:", response.data);
-    return response.data;
+    return JSON.stringify(returnObjects);
   } catch (error) {
-    console.error("Error in upsertScenarioTable:", error);
     throw error; // Re-throw the error for further handling if necessary
   }
 }

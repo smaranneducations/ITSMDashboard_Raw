@@ -19,7 +19,7 @@ const useStyles = makeStyles({
     rowGap: "10px",
   },
   input: {
-    width: "10vw", // Adjusted for example, ensure this fits your design
+    width: "30vw", // Adjusted for example, ensure this fits your design
   },
 });
 
@@ -49,11 +49,11 @@ const DialogeUserForm = ({ isDialogeUserFormOpen, setIsDialogeUserFormOpen, hand
       <DialogSurface>
         <form onSubmit={handleSubmit}>
           <DialogBody>
-            <DialogTitle>Enter 4-digit code</DialogTitle>
+            <DialogTitle>Enter Number of Records to be added (1 to 9999)</DialogTitle>
             <DialogContent className={styles.content}>
-              <Label required htmlFor="number-input">
+              {/* <Label required htmlFor="number-input">
                 4-digit Code
-              </Label>
+              </Label> */}
               <Input
                 className={styles.input}
                 required

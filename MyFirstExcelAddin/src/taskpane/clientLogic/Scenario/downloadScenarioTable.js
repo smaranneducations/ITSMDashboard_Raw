@@ -1,9 +1,14 @@
-import axios from 'axios';
 
-export const downloadScenarioTable = async (context, tableName) => {
+
+export const downloadScenarioTable = async (apiData,context, tableName) => {
+  if (!apiData) {
+    console.error('No data provided to reset scenario records');
+    return;
+  }
+
   try {
-    const response = await axios.get(`http://localhost:3001/api/fetchdata/${tableName}`);
-    const data = response.data;
+    
+    const data = apiData;
 
     const result = await Excel.run(async (localContext) => {
       try {
@@ -27,15 +32,18 @@ export const downloadScenarioTable = async (context, tableName) => {
           const rows = data.map(item => [item.ScenarioCode, item.ScenarioOpen, item.ScenarioName, item.ScenarioDescription, item.UD1, item.UD2, item.UD3, item.DocAttachments,'=IF(COUNTIF([ScenarioName],[@ScenarioName])>1,"No","Yes")']);
           expensesTable.rows.add(null,rows);
           // Unlock all cells in columns B through H
-          expensesTable.columns.getItemAt(1).getDataBodyRange().getResizedRange(0, 5).format.protection.locked = false;
+          [1, 3, 4, 5,6].forEach(index => expensesTable.columns.getItemAt(index).getDataBodyRange().format.protection.locked = false);
+
           
 
           // Set the fill color for all cells in column I
-          let columnIRange = expensesTable.columns.getItem("DocAttachments").getDataBodyRange();
-          columnIRange.format.fill.color = "#FFBE33";
+          /* let columnIRange = expensesTable.columns.getItem("DocAttachments").getDataBodyRange();
+          columnIRange.format.fill.color = "#FFBE33"; other way of doing the below action 
+          expensesTable.columns.getItemAt(7).getDataBodyRange().format.fill.color = "#FFBE33";
+          expensesTable.columns.getItemAt(8).getDataBodyRange().format.fill.color = "#FFBE33"; */
 
-          expensesTable.columns.getItemAt(0).getDataBodyRange().format.fill.color = "#FFBE33";
-          expensesTable.columns.getItemAt(8).getDataBodyRange().format.fill.color = "#FFBE33";
+          [0, 2, 7, 8].forEach(index => expensesTable.columns.getItemAt(index).getDataBodyRange().format.fill.color = "#FFBE33");
+          [2].forEach(index => expensesTable.columns.getItemAt(index).getDataBodyRange().format.autofitColumns());
           
           sheet.protection.protect({allowAutoFilter: true, allowSort: true }, 'Welcome123!');
           await localContext.sync();

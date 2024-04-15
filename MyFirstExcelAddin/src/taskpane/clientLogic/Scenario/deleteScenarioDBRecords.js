@@ -79,20 +79,3 @@ export const deleteScenarioDBRecords = async (context, tableName) => {
         console.error("Error deleting scenario records: ", error); // Log any errors encountered during execution.
     }
 };
-
-export const deleteScenarioDBRecords1 = async (tableName, returnObjects) => {
-    try {
-        // Here you send the JSON.stringify(returnObjects) via axios
-        const response = await axios.post(`http://localhost:3001/api/deleteRecordsByScenarioCode/${tableName}`, JSON.stringify(returnObjects), {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log('response iside the deleteScenarioDBRecords1:', response);
-        console.log('response iside the deleteScenarioDBRecords1:', response.data.message);
-        return response.data.message;
-
-    } catch (error) {
-        console.error("Error deleting scenario records from DB: ", error); // Log any errors encountered during execution.
-    }
-};

@@ -1,17 +1,19 @@
-import axios from 'axios';
 
 function normalizeValue(value) {
   return value == null || value === "" ? null : value;
 }
 
-export const updateOrAddScenarioRecords = async (localContext, tableName) => {
- 
-try {
-  const response = await axios.get("http://localhost:3001/api/fetchdata/Scenario");
-  const apiData = response.data;
+export const updateOrAddScenarioRecords = async (scenarioData, localContext, tableName) => {
+  if (!scenarioData) {
+    console.error('No data provided to reset scenario records');
+    return;
+  }
 
+  try {
+    
+    const apiData = scenarioData;
 
-  await Excel.run(async (localContext) => {
+    await Excel.run(async (localContext) => {
     const sheet = localContext.workbook.worksheets.getItem(tableName);
     const table = sheet.tables.getItem(tableName);
     localContext.application.calculationMode = Excel.CalculationMode.manual;
@@ -20,7 +22,7 @@ try {
     await localContext.sync();
 
     // Remove any existing color formatting
-    [1, 2, 3, 4, 5, 6].forEach(i => table.columns.getItemAt(i).getDataBodyRange().format.fill.clear());
+    [1, 3, 4, 5, 6].forEach(i => table.columns.getItemAt(i).getDataBodyRange().format.fill.clear());
 
    
    /*  table.getRange().format.fill.clear(); */
@@ -90,10 +92,7 @@ try {
             const addedRowRange = addedRows.getRange();
             localContext.trackedObjects.add(addedRowRange);
             await localContext.sync();
-             // Format only the specified columns (0 to 6) of the newly added row
-              for (let i = 1; i <= 6; i++) {
-                  addedRowRange.getCell(0, i).format.fill.color = "green";
-                  }
+            [1, 3, 4, 5, 6].forEach(columnIndex => {addedRowRange.getCell(0, columnIndex).format.fill.color = "green"; });
             await localContext.sync();
             // Once done with the object, it's a good practice to remove it from tracked objects to free resources
             localContext.trackedObjects.remove(addedRowRange);

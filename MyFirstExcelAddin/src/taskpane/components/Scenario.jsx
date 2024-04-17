@@ -36,7 +36,7 @@ const Scenario = () => {
     const [DeleteDataInDBDialogMessage, setDeleteDataInDBDialogMessage] = useState('');
     const [DeleteScenarioDBRecordsresult, setDeleteScenarioDBRecordsresult] = useState(null); // Initialize the state variable
     const { data: scenarioData, isLoading, error,refetch } = useGetScenarioDataQuery(); 
-    const [upsertScenarioRecordInDB] = useUpsertScenarioRecordInDBMutation();
+    const [upsertScenarioRecordInDB , {isLoading: isUpdatingProgram, error: updateProgramError }] = useUpsertScenarioRecordInDBMutation();
     const [deleteScenarioInDBRecords] = useDeleteScenarioInDBRecordsMutation();
 
   // Use RTK Query hook thsi line is the one which gives error
@@ -84,13 +84,17 @@ const Scenario = () => {
           } else if (resultCheckBeforeUploadScenario === "Valid") {
           
         const result = await upsertScenarioTable(officeContext, "Scenario");
+        console.log("upsertScenarioTable---", result);
         const resultupsertScenarioRecordInDB = await upsertScenarioRecordInDB({tableName: 'Scenario', data: result}).unwrap();
-        console.log("upsertScenarioRecordInDB", resultupsertScenarioRecordInDB);
-        if (resultupsertScenarioRecordInDB.err) {
-            setDialogMessage(`Error uploading scenario records:. ${resultupsertScenarioRecordInDB.err}`);
+        console.log("upsertScenarioRecordInDB---", resultupsertScenarioRecordInDB);
+        console.log("upsertScenarioRecordInDBupdates---", JSON.stringify(resultupsertScenarioRecordInDB.rowsAffected.updates));
+        console.log("upsertScenarioRecordInDBinserts---", JSON.stringify(resultupsertScenarioRecordInDB.rowsAffected.inserts));
+
+        if (resultupsertScenarioRecordInDB == null) {
+            setDialogMessage(`Error uploading scenario records, please contact admin:.`);
             setIsDialogOpen(true);
           } else {
-            setDialogMessage(`Scenario records uploaded successfully. ${resultupsertScenarioRecordInDB.rowsAffected.statusText}`);
+            setDialogMessage(`Upsert Operation performed successfully. \n ${resultupsertScenarioRecordInDB.rowsAffected.statusText}`);
             setIsDialogOpen(true);
           }
         }

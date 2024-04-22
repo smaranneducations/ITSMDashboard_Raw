@@ -1,4 +1,3 @@
-
 const upsertScenarioTable = async (context, tableName) => {
   try {
     let returnObjects = [];
@@ -26,13 +25,16 @@ const upsertScenarioTable = async (context, tableName) => {
         returnObjects = returnObjectFromValues(values, columnNames);
       }
     });
+
     return JSON.stringify(returnObjects);
+    console.log("returnObjects", returnObjects);
   } catch (error) {
     throw error; // Re-throw the error for further handling if necessary
   }
 }
 
-// This function converts a 2D array of values into a generic JSON object.
+// This function converts a 2D array of values into a generic JSON object,
+// filtering based on the value in the 8th column (index 7).
 function returnObjectFromValues(values, keys) {
   let objectArray = [];
   for (let i = 0; i < values.length; i++) { // Start loop from 0 to include all rows
@@ -40,7 +42,12 @@ function returnObjectFromValues(values, keys) {
     for (let j = 0; j < values[i].length; j++) {
       object[keys[j]] = values[i][j];
     }
-    objectArray.push(object);
+    // Only add the object if the 8th column is "To be updated" or "To be inserted"
+
+    if (values[i][8] === "To be updated" || values[i][8] === "To be inserted") {
+      objectArray.push(object);
+
+    }
   }
   return objectArray;
 }

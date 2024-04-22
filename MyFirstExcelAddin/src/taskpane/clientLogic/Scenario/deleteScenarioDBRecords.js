@@ -4,7 +4,7 @@ function normalizeValue(value) {
     return value == null || value === "" ? null : value;
 }
 
-export const deleteScenarioDBRecords = async (context, tableName) => {
+export const deleteScenarioDBRecords = async (scenarioData, context, tableName) => {
     try {
         let scenarioDatainDB = [];
         let scenarioDatainDBtobeDeleted = [];
@@ -23,9 +23,8 @@ export const deleteScenarioDBRecords = async (context, tableName) => {
             tableDataBodyRange.load('rowIndex, rowCount'); // Load rowIndex and rowCount for the table's data body range.
             await context.sync(); // Synchronize to ensure table data body range properties are loaded.
 
-            // Fetch data from the API
-            const response = await axios.get(`http://localhost:3001/api/fetchdata/${tableName}`);
-            const apiData = response.data;
+            
+            const apiData = scenarioData;
 
             // Map each selected range to an object with its start and end row indices relative to the table's data body.
             let ranges = selections.areas.items.map(range => ({

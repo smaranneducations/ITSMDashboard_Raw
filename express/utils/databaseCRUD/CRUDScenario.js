@@ -2,6 +2,13 @@
 
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../sequelize.js'; // Assuming you have your Sequelize instance configured in a separate file
+import pkg from 'lodash';
+const { isEqual } = pkg;
+
+
+function normalizeValue(value) {
+  return value == null || value === "" ? null : value;
+}
 
 // Suppress SQL logging
 sequelize.options.logging = false;
@@ -9,7 +16,7 @@ sequelize.options.logging = false;
 // Define your model here
 const Scenario = sequelize.define('Scenario', {
   ScenarioCode: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true
   },
@@ -47,65 +54,49 @@ async function fetchData(tableName) {
 }
 
 async function insertOrUpdateRecord_Sceanrio(tableName, records) {
-    const CustomScenario = sequelize.define(
-        'CustomScenario',
-        {
-            ScenarioCode: {
-              type: DataTypes.STRING,
-              primaryKey: true,
-              autoIncrement: true
-            },
-            ScenarioOpen: DataTypes.STRING,
-            ScenarioName: {
-              type: DataTypes.STRING,
-              unique: true // Ensures uniqueness of ScenarioName
-            },
-            ScenarioDescription: DataTypes.TEXT,
-            UD1: DataTypes.STRING,
-            UD2: DataTypes.STRING,
-            UD3: DataTypes.STRING,
-            DocAttachments: DataTypes.INTEGER
-          }, {
-            tableName: 'Scenario',
-            timestamps: false // Assuming there are no timestamp fields in your table
-          });
-          CustomScenario.removeAttribute('ScenarioCode');
+  // Exclude ScenarioCode from the records before logging or returning
+  const modifiedRecords = records.map(record => {
+    const { ScenarioCode, IsUnique, ...rest } = record;
+    return rest;
+});
 
+
+  let updates = [];
+  let inserts = [];
     let updatedCount = 0;
     let insertedCount = 0;
     let statusText = '';
     let err = '';
 
     try {
-        for (let record of records) {
-            // Check if the record has a valid ScenarioName
-            if (record.ScenarioName) {
+        for (let record of modifiedRecords) {
                 // Check if the record exists in the table based on the unique identifier (ScenarioName)
-                const existingRecord = await CustomScenario.findOne({ where: { ScenarioName: record.ScenarioName }});
-                
-                if (existingRecord) {
-                    // Update the existing record
-                    await CustomScenario.update(record, { where: { ScenarioName: record.ScenarioName } });
-                    updatedCount++;
-                } else {
-                    // Insert a new record
-                    await CustomScenario.create(record);
-                    insertedCount++;
+                const existingRecord = await Scenario.findOne({ where: { ScenarioName: record.ScenarioName }});
+                if ( normalizeValue(existingRecord)) {
+                  const { ScenarioCode, ...rest } = existingRecord.dataValues;
+                  existingRecord.dataValues = rest;
+                  if( !isEqual(existingRecord.dataValues, record)){
+                  const updatedRecord = await Scenario.update(record, { where: { ScenarioName: record.ScenarioName } });
+                  updatedCount++;
+                  updates.push({ ScenarioCode: existingRecord.ScenarioCode, from: existingRecord.dataValues, to: record });
+                  }
+                } else if (!existingRecord) {
+                  // Insert a new record
+                  const inserted = await Scenario.create(record, { returning: true });
+                  insertedCount++;
+                  inserts.push({ ScenarioCode: inserted.ScenarioCode, created: inserted.dataValues });
                 }
-            } else {
-                console.warn('Skipping record without a valid ScenarioName:', record);
-            }
         }
 
-        statusText = `${updatedCount} records updated successfully, ${insertedCount} records inserted successfully.`;
-    } catch (error) {
-        err = error; // Capture the error message
-        console.error("Error:", err);
+        statusText = `${updatedCount} records updated successfully \n, ${insertedCount} records inserted successfully.`;
+        console.log(statusText);
+        // Return both statusText and err (if any error occurred)
+        return { statusText: statusText, updates : updates, inserts: inserts };
+    } catch (error) {   
+      console.error("Error inserting/updating records: ", error);  
+      throw new Error(error)  
     }
-
-    console.log(statusText);
-    // Return both statusText and err (if any error occurred)
-    return { statusText, err };
+   
 }
 
   

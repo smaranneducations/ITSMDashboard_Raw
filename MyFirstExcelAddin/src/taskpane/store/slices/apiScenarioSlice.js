@@ -1,13 +1,14 @@
-// src/store/slices/apiScenarioSlice.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-export const apiSlice = createApi({
+export const apiScenarioSlice = createApi({
   reducerPath: 'apiScenario',
   baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3001/api' }),
+  tagTypes: ['Scenario'],  // Define a tag type
   endpoints: (builder) => ({
     // Query endpoint for getting scenario data
     getScenarioData: builder.query({
       query: () => '/fetchdata/Scenario',
+      providesTags: ['Scenario'],  // This endpoint provides the 'Scenario' tag
     }),
     // Mutation endpoint for upserting scenario data
     upsertScenarioRecordInDB: builder.mutation({
@@ -19,21 +20,27 @@ export const apiSlice = createApi({
           'Content-Type': 'application/json',
         },
       }),
+      invalidatesTags: ['Scenario'],  // Invalidate the 'Scenario' tag upon mutation
     }),
     // New mutation endpoint to delete scenario records from the database
     deleteScenarioInDBRecords: builder.mutation({
       query: ({ tableName, scenarioCodes }) => ({
-          url: `/deleteRecordsByScenarioCode/${tableName}`,
-          method: 'POST',
-          body: JSON.stringify(scenarioCodes),
-          headers: {
-              'Content-Type': 'application/json',
-          },
+        url: `/deleteRecordsByScenarioCode/${tableName}`,
+        method: 'POST',
+        body: JSON.stringify(scenarioCodes),
+        headers: {
+            'Content-Type': 'application/json',
+        },
       }),
-  }),
+      invalidatesTags: ['Scenario'],  // Invalidate the 'Scenario' tag upon mutation
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetScenarioDataQuery, useUpsertScenarioRecordInDBMutation, useDeleteScenarioInDBRecordsMutation } = apiSlice;
+export const {
+  useGetScenarioDataQuery,
+  useUpsertScenarioRecordInDBMutation,
+  useDeleteScenarioInDBRecordsMutation
+} = apiScenarioSlice;

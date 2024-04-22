@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext,useEffect } from 'react';
 import OfficeContext from '../OfficeContext'; // Adjust the import path as necessary
 import Header from './Header';
 import Footer from "./Footer";
@@ -35,14 +35,22 @@ const Scenario = () => {
     const [DeleteDataInDBDialogOpen, setDeleteDataInDBDialogOpen] = useState(false);
     const [DeleteDataInDBDialogMessage, setDeleteDataInDBDialogMessage] = useState('');
     const [DeleteScenarioDBRecordsresult, setDeleteScenarioDBRecordsresult] = useState(null); // Initialize the state variable
-    const { data: scenarioData, isLoading, error,refetch } = useGetScenarioDataQuery(); 
-    const [upsertScenarioRecordInDB] = useUpsertScenarioRecordInDBMutation();
+    const { data: scenarioData, isLoading, isSuccess, error, refetch } = useGetScenarioDataQuery(); 
+    const [upsertScenarioRecordInDB , {isLoading: isUpdatingProgram, error: updateProgramError }] = useUpsertScenarioRecordInDBMutation();
     const [deleteScenarioInDBRecords] = useDeleteScenarioInDBRecordsMutation();
 
   // Use RTK Query hook thsi line is the one which gives error
 
 /* console.log("Scenario Data: ", scenarioData); */
     const officeContext = useContext(OfficeContext); // Use context here
+
+    useEffect(() => {
+        if (isSuccess) {
+            console.log('DeleteDataInDBDialogOk button after  clicked',scenarioData);
+            resetScenarioRecords(scenarioData, officeContext, "Scenario");
+        }
+    }, [scenarioData]);
+
 
     const handleDownButtonClick = async () => {
         if (!officeContext) {
@@ -84,13 +92,17 @@ const Scenario = () => {
           } else if (resultCheckBeforeUploadScenario === "Valid") {
           
         const result = await upsertScenarioTable(officeContext, "Scenario");
+        console.log("upsertScenarioTable---", result);
         const resultupsertScenarioRecordInDB = await upsertScenarioRecordInDB({tableName: 'Scenario', data: result}).unwrap();
-        console.log("upsertScenarioRecordInDB", resultupsertScenarioRecordInDB);
-        if (resultupsertScenarioRecordInDB.err) {
-            setDialogMessage(`Error uploading scenario records:. ${resultupsertScenarioRecordInDB.err}`);
+        console.log("upsertScenarioRecordInDB---", resultupsertScenarioRecordInDB);
+        console.log("upsertScenarioRecordInDBupdates---", JSON.stringify(resultupsertScenarioRecordInDB.rowsAffected.updates));
+        console.log("upsertScenarioRecordInDBinserts---", JSON.stringify(resultupsertScenarioRecordInDB.rowsAffected.inserts));
+
+        if (resultupsertScenarioRecordInDB == null) {
+            setDialogMessage(`Error uploading scenario records, please contact admin:.`);
             setIsDialogOpen(true);
           } else {
-            setDialogMessage(`Scenario records uploaded successfully. ${resultupsertScenarioRecordInDB.rowsAffected.statusText}`);
+            setDialogMessage(`Upsert Operation performed successfully. \n ${resultupsertScenarioRecordInDB.rowsAffected.statusText}`);
             setIsDialogOpen(true);
           }
         }
@@ -141,7 +153,7 @@ const Scenario = () => {
             case 'DeleteInDB':
                 console.log('Delete in Database button clicked');
                 try {
-                    const deleteScenarioDBRecordsresult = await deleteScenarioDBRecords(officeContext, "Scenario");
+                    const deleteScenarioDBRecordsresult = await deleteScenarioDBRecords(scenarioData,officeContext, "Scenario");
                     setDeleteDataInDBDialogOpen(true);
                     setDeleteDataInDBDialogMessage(deleteScenarioDBRecordsresult.message);
                     setDeleteScenarioDBRecordsresult(deleteScenarioDBRecordsresult); // Store the result in the state variable
@@ -162,9 +174,8 @@ const Scenario = () => {
       
         if (action === 'Confirm') {
            setDeleteDataInDBDialogOpen(isOpen);
-          /* const result = await deleteScenarioDBRecords1("Scenario", DeleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted); */
           const resultDeleteScenarioDBRecords = await deleteScenarioInDBRecords({tableName: 'Scenario', scenarioCodes: DeleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted}).unwrap();
-          await deleteScenarioRecords(officeContext, "Scenario");
+          /* await deleteScenarioRecords(officeContext, "Scenario"); */
           if (resultDeleteScenarioDBRecords.err) {
             setDialogMessage(`Error deleting scenario records:. ${resultDeleteScenarioDBRecords.err}`);
             setIsDialogOpen(true);

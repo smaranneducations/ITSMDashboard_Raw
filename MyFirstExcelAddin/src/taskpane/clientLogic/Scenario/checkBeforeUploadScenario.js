@@ -24,14 +24,26 @@ export const checkBeforeUploadScenario = async (scenarioData, context, tableName
           const scenarioCode = normalizeValue(row.values[0][0]);
           const scenarioOpen = normalizeValue(row.values[0][1]);
           const scenarioName = normalizeValue(row.values[0][2]);
+          const scenarioDescription = normalizeValue(row.values[0][3]);
+          const uD1 = normalizeValue(row.values[0][4]);
+          const uD2 = normalizeValue(row.values[0][5]);
+          const uD3 = normalizeValue(row.values[0][6]);
   
           if (scenarioOpen == null) {
             row.getRange().getCell(0, 8).values = [["Not valid record"]];
             returnMsg = "Not Valid";
           } else {
             const existingRecord = scenarioData.find(data => normalizeValue(data.ScenarioName) === scenarioName);
-            const status = existingRecord ? "To be updated" : "To be inserted";
-            row.getRange().getCell(0, 8).values = [[status]];
+            if(existingRecord){
+                if (normalizeValue(existingRecord.ScenarioOpen) == scenarioOpen && normalizeValue(existingRecord.ScenarioDescription) == scenarioDescription && normalizeValue(existingRecord.UD1) == uD1 && normalizeValue(existingRecord.UD2) == uD2 && normalizeValue(existingRecord.UD3) == uD3) {
+                    row.getRange().getCell(0, 8).values = [["No changes"]];
+                }else {
+                    row.getRange().getCell(0, 8).values = [["To be updated"]];
+                }
+
+            }else{
+              row.getRange().getCell(0, 8).values = [["To be inserted"]];
+            }
           }
         }
   

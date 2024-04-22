@@ -5,6 +5,11 @@ import { sequelize } from '../sequelize.js'; // Assuming you have your Sequelize
 import pkg from 'lodash';
 const { isEqual } = pkg;
 
+
+function normalizeValue(value) {
+  return value == null || value === "" ? null : value;
+}
+
 // Suppress SQL logging
 sequelize.options.logging = false;
 
@@ -67,15 +72,14 @@ async function insertOrUpdateRecord_Sceanrio(tableName, records) {
         for (let record of modifiedRecords) {
                 // Check if the record exists in the table based on the unique identifier (ScenarioName)
                 const existingRecord = await Scenario.findOne({ where: { ScenarioName: record.ScenarioName }});
-                const { ScenarioCode, ...rest } = existingRecord.dataValues;
-                existingRecord.dataValues = rest;
-
-                console.log("Existing record dataValues:", existingRecord.dataValues);
-                console.log("New record:", record);
-                if (existingRecord && !isEqual(existingRecord.dataValues, record)) {
+                if ( normalizeValue(existingRecord)) {
+                  const { ScenarioCode, ...rest } = existingRecord.dataValues;
+                  existingRecord.dataValues = rest;
+                  if( !isEqual(existingRecord.dataValues, record)){
                   const updatedRecord = await Scenario.update(record, { where: { ScenarioName: record.ScenarioName } });
                   updatedCount++;
                   updates.push({ ScenarioCode: existingRecord.ScenarioCode, from: existingRecord.dataValues, to: record });
+                  }
                 } else if (!existingRecord) {
                   // Insert a new record
                   const inserted = await Scenario.create(record, { returning: true });

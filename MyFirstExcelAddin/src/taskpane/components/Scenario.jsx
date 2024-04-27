@@ -21,7 +21,8 @@ import {addScenarioRecords} from '../clientLogic/Scenario/addScenarioRecords';
 import { deleteScenarioRecords } from '../clientLogic/Scenario/deleteScenarioRecords'; 
 import { deleteScenarioDBRecords } from '../clientLogic/Scenario/deleteScenarioDBRecords';
 import { useGetScenarioDataQuery, useUpsertScenarioRecordInDBMutation,useDeleteScenarioInDBRecordsMutation } from '../store/slices/apiScenarioSlice.js'
-import { checkBeforeUploadScenario } from '../clientLogic/Scenario/checkBeforeUploadScenario';  
+import { checkBeforeUploadScenario } from '../clientLogic/Scenario/checkBeforeUploadScenario'; 
+import { Spinner } from "@fluentui/react-components";
 
 
 const Scenario = () => {
@@ -38,6 +39,7 @@ const Scenario = () => {
     const { data: scenarioData, isLoading, isSuccess, error, refetch } = useGetScenarioDataQuery(); 
     const [upsertScenarioRecordInDB , {isLoading: isUpdatingProgram, error: updateProgramError }] = useUpsertScenarioRecordInDBMutation();
     const [deleteScenarioInDBRecords] = useDeleteScenarioInDBRecordsMutation();
+    const [isSpinner, setIsSpinner] = useState(false);
 
   // Use RTK Query hook thsi line is the one which gives error
 
@@ -48,6 +50,7 @@ const Scenario = () => {
         if (isSuccess) {
             console.log('DeleteDataInDBDialogOk button after  clicked',scenarioData);
             resetScenarioRecords(scenarioData, officeContext, "Scenario");
+            setIsSpinner(false);
         }
     }, [scenarioData]);
 
@@ -94,6 +97,8 @@ const Scenario = () => {
         const result = await upsertScenarioTable(officeContext, "Scenario");
         console.log("upsertScenarioTable---", result);
         const resultupsertScenarioRecordInDB = await upsertScenarioRecordInDB({tableName: 'Scenario', data: result}).unwrap();
+        setIsSpinner(true);
+        console.log("updateProgramError---", updateProgramError);
         console.log("upsertScenarioRecordInDB---", resultupsertScenarioRecordInDB);
         console.log("upsertScenarioRecordInDBupdates---", JSON.stringify(resultupsertScenarioRecordInDB.rowsAffected.updates));
         console.log("upsertScenarioRecordInDBinserts---", JSON.stringify(resultupsertScenarioRecordInDB.rowsAffected.inserts));
@@ -265,6 +270,8 @@ const Scenario = () => {
                 </div>
             </div>
             <Footer />
+
+            {isSpinner && (<Spinner appearance="primary" labelPosition="before" label="Upsert action started...." size="medium" />)}
 
             {DeleteDataInDBDialogOpen && (
                 <DeleteDataInDBDialog 

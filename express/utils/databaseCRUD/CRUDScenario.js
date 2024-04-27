@@ -1,6 +1,6 @@
 // Database CRUD operations using Sequelize
 
-import { DataTypes } from 'sequelize';
+import { DataTypes,Op } from 'sequelize';
 import { sequelize } from '../sequelize.js'; // Assuming you have your Sequelize instance configured in a separate file
 import pkg from 'lodash';
 const { isEqual } = pkg;
@@ -52,6 +52,37 @@ async function fetchData(tableName) {
   const data = await Scenario.findAll();
   return data;
 }
+
+async function fetchDataByFilter(tableName, filterConditions) {
+  try {
+    if (!filterConditions || filterConditions.length === 0) {
+      const data = await Scenario.findAll();
+      return data;
+    }
+
+    const whereClause = {
+      [Op.and]: filterConditions.map((condition) => ({
+        [condition.columnName]: {
+          [Op.like]: `%${condition.filterValue}%`, // Default: like search with wildcards
+        },
+      })),
+    };
+
+    const filteredData = await Scenario.findAll({ where: whereClause });
+    console.log(filteredData.dataValues);
+    return filteredData.dataValues;
+    
+   
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+
+
+
 
 async function insertOrUpdateRecord_Sceanrio(tableName, records) {
   // Exclude ScenarioCode from the records before logging or returning
@@ -111,4 +142,4 @@ async function deleteRecordsByScenarioCode(tableName, scenarioCodes) {
   return { statusText: `${rowsAffected} records deleted successfully.` };
 }
 
-export { getColumnNames, fetchData, insertOrUpdateRecord_Sceanrio, deleteRecordsByScenarioCode };
+export { getColumnNames, fetchData, fetchDataByFilter, insertOrUpdateRecord_Sceanrio, deleteRecordsByScenarioCode };

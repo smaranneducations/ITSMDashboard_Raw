@@ -28,7 +28,7 @@ export const checkTableInNonTableNameSheets = async (context, tableName) => {
                 if (sheetTables.items.length === 1) {
                     const topLeftCell = sheetTables.items[0].getRange().load("address");
                     await context.sync();
-                    if (sheetTables.items[0].name == tableName && topLeftCell.address.split('!')[1].split(':')[0] == "A5") {
+                    if (sheetTables.items[0].name == tableName && topLeftCell.address.split('!')[1].split(':')[0] == "B5") {
                         sheetExists = "sheet exists and table setup is correct";
                         return { found: false, message: sheetExists };
                     } else {

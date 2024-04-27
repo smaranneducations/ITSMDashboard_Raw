@@ -1,58 +1,68 @@
+import { resetScenarioRecords } from "./resetScenarioRecords";
 
-
-export const downloadScenarioTable = async (apiData,context, tableName) => {
+export const downloadScenarioTable = async (apiData, context, tableName) => {
   if (!apiData) {
     console.error('No data provided to reset scenario records');
     return;
   }
 
   try {
-    
-    const data = apiData;
+    const workingData = apiData;
 
-    const result = await Excel.run(async (localContext) => {
+    const result = await Excel.run(async (context) => {
       try {
-        const sheets = localContext.workbook.worksheets;
+        const sheets = context.workbook.worksheets;
         sheets.load("items,name");
-        await localContext.sync();
+        await context.sync();
 
         let sheet = sheets.items.find(sheet => sheet.name === tableName);
         
         if (!sheet) {
           sheet = sheets.add(tableName);
           sheet.showGridlines = false;
-          let expensesTable = sheet.tables.add("A5:I5", true /*hasHeaders*/);
-          expensesTable.name = tableName;
-          expensesTable.getHeaderRowRange().values = [["ScenarioCode", "ScenarioOpen", "ScenarioName", "ScenarioDescription", "UD1", "UD2", "UD3", "DocAttachments","IsUnique"]];
+          sheet.getRange("A:A").format.columnWidth = 100;
+          sheet.getRange("A4").values = [["Retrieve Filter"]];
+          sheet.getRange("A4").format.font.bold = true;
+          sheet.getRange("A3").values = [["Dropdown filter"]];
+          sheet.getRange("A3").format.font.bold = true;
+          sheet.getRange("A5").values = [["Table Headers"]];
+          sheet.getRange("A5").format.font.bold = true;
+         
+        
+        [ "D4", "E4", "F4", "G4", "H4"].forEach(async (address) => {
+          const edgeTypes = ["EdgeTop", "EdgeBottom", "EdgeLeft", "EdgeRight"];
+
+                    edgeTypes.forEach(async (edgeType) => {
+                        sheet.getRange(address).format.borders.getItem(edgeType).style = "Continuous";
+                        sheet.getRange(address).format.borders.getItem(edgeType).outline.weight = "Thin";
+                    });
+                    sheet.getRange(address).format.fill.color = "#07DCCE";
+                    sheet.getRange(address).format.protection.locked = false;
+        });
+        
+        await context.sync();
+          let ScenarioTable = sheet.tables.add("B5:J5", true /*hasHeaders*/);
+          ScenarioTable.name = tableName;
+          ScenarioTable.getHeaderRowRange().values = [["ScenarioCode", "ScenarioOpen", "ScenarioName", "ScenarioDescription", "UD1", "UD2", "UD3", "DocAttachments","IsUnique"]];
           sheet.freezePanes.freezeRows(5);
-          expensesTable.columns.getItem("ScenarioOpen").getDataBodyRange().dataValidation.rule = { list: { inCellDropDown: true, source: ["Open", "Closed"].join(",") } };
-          
-          await localContext.sync();
+          ScenarioTable.columns.getItem("ScenarioOpen").getDataBodyRange().dataValidation.rule = { list: { inCellDropDown: true, source: ["Open", "Closed"].join(",") } };
+          await context.sync();
 
-          const rows = data.map(item => [item.ScenarioCode, item.ScenarioOpen, item.ScenarioName, item.ScenarioDescription, item.UD1, item.UD2, item.UD3, item.DocAttachments,'=IF(COUNTIF([ScenarioName],[@ScenarioName])>1,"No","Yes")']);
-          expensesTable.rows.add(null,rows);
-          // Unlock all cells in columns B through H
-          [1, 3, 4, 5,6].forEach(index => expensesTable.columns.getItemAt(index).getDataBodyRange().format.protection.locked = false);
+          [1, 3, 4, 5, 6].forEach(index => ScenarioTable.columns.getItemAt(index).getDataBodyRange().format.protection.locked = false);
+          [0, 2, 7, 8].forEach(index => ScenarioTable.columns.getItemAt(index).getDataBodyRange().format.fill.color = "#FFBE33");
+          [2].forEach(index => ScenarioTable.columns.getItemAt(index).getDataBodyRange().format.autofitColumns());
+          await context.sync(); // Synchronize changes with Excel
 
-          
-
-          // Set the fill color for all cells in column I
-          /* let columnIRange = expensesTable.columns.getItem("DocAttachments").getDataBodyRange();
-          columnIRange.format.fill.color = "#FFBE33"; other way of doing the below action 
-          expensesTable.columns.getItemAt(7).getDataBodyRange().format.fill.color = "#FFBE33";
-          expensesTable.columns.getItemAt(8).getDataBodyRange().format.fill.color = "#FFBE33"; */
-
-          [0, 2, 7, 8].forEach(index => expensesTable.columns.getItemAt(index).getDataBodyRange().format.fill.color = "#FFBE33");
-          [2].forEach(index => expensesTable.columns.getItemAt(index).getDataBodyRange().format.autofitColumns());
+          /* await resetScenarioRecords(workingData, context, tableName); */
           
           sheet.protection.protect({allowAutoFilter: true, allowSort: true }, 'Welcome123!');
-          await localContext.sync();
+          await context.sync();
         }
       } catch (excelError) {
         console.error("Excel operation failed:", excelError);
       }
     });
   } catch (error) {
-    console.error("Failed to download data or Excel operation failed:", error);
+    console.error("Failed to download workingData or Excel operation failed:", error);
   }
 };

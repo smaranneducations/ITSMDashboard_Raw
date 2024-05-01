@@ -69,8 +69,8 @@ async function fetchDataByFilter(tableName, filterConditions) {
     };
 
     const filteredData = await Scenario.findAll({ where: whereClause });
-    console.log(filteredData.dataValues);
-    return filteredData.dataValues;
+    console.log(filteredData);
+    return filteredData;
     
    
   } catch (error) {
@@ -120,11 +120,9 @@ async function insertOrUpdateRecord_Sceanrio(tableName, records) {
         }
 
         statusText = `${updatedCount} records updated successfully \n, ${insertedCount} records inserted successfully.`;
-        console.log(statusText);
         // Return both statusText and err (if any error occurred)
         return { statusText: statusText, updates : updates, inserts: inserts };
     } catch (error) {   
-      console.error("Error inserting/updating records: ", error);  
       throw new Error(error)  
     }
    

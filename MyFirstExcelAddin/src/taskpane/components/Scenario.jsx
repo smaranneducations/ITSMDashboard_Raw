@@ -20,9 +20,8 @@ import DeleteDataInDBDialog from './generic/DeleteDataInDBDialog';
 import {addScenarioRecords} from '../clientLogic/Scenario/addScenarioRecords';
 import { deleteScenarioRecords } from '../clientLogic/Scenario/deleteScenarioRecords'; 
 import { deleteScenarioDBRecords } from '../clientLogic/Scenario/deleteScenarioDBRecords';
-import { useGetScenarioDataQuery, useUpsertScenarioRecordInDBMutation,useDeleteScenarioInDBRecordsMutation } from '../store/slices/apiScenarioSlice.js'
-import { checkBeforeUploadScenario } from '../clientLogic/Scenario/checkBeforeUploadScenario'; 
-import { Spinner } from "@fluentui/react-components";
+import { useGetScenarioDataQuery,useGetScenarioDataTransformedQuery,useGetScenarioDataFilteredMutation, useUpsertScenarioRecordInDBMutation,useDeleteScenarioInDBRecordsMutation } from '../store/slices/apiScenarioSlice.js'
+import { checkBeforeUploadScenario } from '../clientLogic/Scenario/checkBeforeUploadScenario';  
 
 
 const Scenario = () => {
@@ -36,21 +35,54 @@ const Scenario = () => {
     const [DeleteDataInDBDialogOpen, setDeleteDataInDBDialogOpen] = useState(false);
     const [DeleteDataInDBDialogMessage, setDeleteDataInDBDialogMessage] = useState('');
     const [DeleteScenarioDBRecordsresult, setDeleteScenarioDBRecordsresult] = useState(null); // Initialize the state variable
-    const { data: scenarioData, isLoading, isSuccess, error, refetch } = useGetScenarioDataQuery(); 
+    const { data: scenarioData, isLoading: scenarioDataisLoading, isSuccess: scenarioDataisSuccess, error:  scenarioDataerror, refetch } = useGetScenarioDataQuery(); 
+    const [getScenarioDataFiltered, { isLoading: scenarioDataisLoadingFiltered, isSuccess: scenarioDataisSuccessFiltered, error: scenarioDataerrorFiltered}] = useGetScenarioDataFilteredMutation();
     const [upsertScenarioRecordInDB , {isLoading: isUpdatingProgram, error: updateProgramError }] = useUpsertScenarioRecordInDBMutation();
     const [deleteScenarioInDBRecords] = useDeleteScenarioInDBRecordsMutation();
-    const [isSpinner, setIsSpinner] = useState(false);
 
   // Use RTK Query hook thsi line is the one which gives error
 
-/* console.log("Scenario Data: ", scenarioData); */
+  const [filterKeyword, setFilterKeyword] = useState([
+   
+  ]);
+
+  const {
+    data: scenarios
+  } = useGetScenarioDataTransformedQuery(filterKeyword);
+
+  console.log("scenarios: ", scenarios);
+  console.log("scenariodata: ", scenarioData);
+  
+  useEffect(() => {
+    // Define an asynchronous function inside the effect
+    const fetchData = async () => {
+      if (filterKeyword) {
+        try {
+          const resultfilteredata = await getScenarioDataFiltered(filterKeyword).unwrap(); // Using .unwrap() to handle the Promise returned by RTK Mutation
+          console.log("resultfilteredata: ", resultfilteredata);
+        } catch (error) {
+          console.error("Failed to fetch filtered data:", error);
+        }
+      }
+    };
+  
+    // Call the async function
+    fetchData();
+  }, [filterKeyword]); // Depend on filterKeyword to refetch when it changes
+  
+  
+
+  
+ 
+
     const officeContext = useContext(OfficeContext); // Use context here
+   
+    
 
     useEffect(() => {
-        if (isSuccess) {
-            console.log('DeleteDataInDBDialogOk button after  clicked',scenarioData);
+        if (scenarioDataisSuccess) {
+            
             resetScenarioRecords(scenarioData, officeContext, "Scenario");
-            setIsSpinner(false);
         }
     }, [scenarioData]);
 
@@ -69,10 +101,10 @@ const Scenario = () => {
             setDialogMessage(message);
             setIsDialogOpen(true);
         } else if (result.message === "Sheet does not exist"){
-            console.log("Sheet does not exist");
+            
             await downloadScenarioTable (scenarioData, officeContext, "Scenario");
         } else if (result.message === "sheet exists and table setup is correct"){
-            console.log("sheet exists and table setup is correct");
+           
             const result1 = await downloadScenarioTableInfo (officeContext, "Scenario");
             setDownloadDataDialogIsOpen(true);
             setDownloadDataDialogMessage("Do you want to merge or reset the data? Excel " + result1.info1);
@@ -95,14 +127,9 @@ const Scenario = () => {
           } else if (resultCheckBeforeUploadScenario === "Valid") {
           
         const result = await upsertScenarioTable(officeContext, "Scenario");
-        console.log("upsertScenarioTable---", result);
+        
         const resultupsertScenarioRecordInDB = await upsertScenarioRecordInDB({tableName: 'Scenario', data: result}).unwrap();
-        setIsSpinner(true);
-        console.log("updateProgramError---", updateProgramError);
-        console.log("upsertScenarioRecordInDB---", resultupsertScenarioRecordInDB);
-        console.log("upsertScenarioRecordInDBupdates---", JSON.stringify(resultupsertScenarioRecordInDB.rowsAffected.updates));
-        console.log("upsertScenarioRecordInDBinserts---", JSON.stringify(resultupsertScenarioRecordInDB.rowsAffected.inserts));
-
+        
         if (resultupsertScenarioRecordInDB == null) {
             setDialogMessage(`Error uploading scenario records, please contact admin:.`);
             setIsDialogOpen(true);
@@ -113,19 +140,19 @@ const Scenario = () => {
         }
         const { statusText, err } = upsertScenarioRecordInDB.rowsAffected;
         const message = err === "" ? statusText : err;
-        console.log("upsertScenarioRecordInDB", message);
+        
     };
 
     const handleDialogeUserFormRecordNumber = async (code, booleanValue, actionString) => {
         setIsDialogeUserFormOpen(booleanValue); // This will always close the dialog based on the booleanValue provided
         if (actionString === "insert record") {
-          console.log("Code entered by the user: ", code);
+          
           setIsDialogeUserFormOpen(false);
           const result = await addScenarioRecords(officeContext, "Scenario", code);
-          console.log("Number of records added to the table: ", result);
+          
         } else if (actionString === "close prompt") {
             setIsDialogeUserFormOpen(false);
-            console.log("Operation aborted by the user.");
+            
         }
       };
       
@@ -137,7 +164,7 @@ const Scenario = () => {
         }
         
         setIsDialogeUserFormOpen(true);
-        console.log("Add button clicked");
+        
 
     };
       
@@ -147,29 +174,29 @@ const Scenario = () => {
     
         switch (actionType) {
             case 'Cancel':
-                console.log('Cancel button clicked');
+                
                 // Handle Cancel action here
                 break;
             case 'DeleteInExcel':
-                console.log('Delete in Excel button clicked');
+                
                 await deleteScenarioRecords(officeContext, "Scenario");
                 // Logic to delete data in Excel
                 break;
             case 'DeleteInDB':
-                console.log('Delete in Database button clicked');
+                
                 try {
                     const deleteScenarioDBRecordsresult = await deleteScenarioDBRecords(scenarioData,officeContext, "Scenario");
                     setDeleteDataInDBDialogOpen(true);
                     setDeleteDataInDBDialogMessage(deleteScenarioDBRecordsresult.message);
                     setDeleteScenarioDBRecordsresult(deleteScenarioDBRecordsresult); // Store the result in the state variable
-                    //console.log(JSON.stringify(deleteScenarioDBRecordsresult.scenarioDatainDBtobeDeleted));
+                    
                 } catch (error) {
                     console.error("Error:", error);
                 }
 
                 break;
             default:
-                console.log('Unknown action');
+                
                 // Handle any unknown actions
         }
     };
@@ -191,7 +218,7 @@ const Scenario = () => {
           
         } else if (action === 'Cancel') {
            setDeleteDataInDBDialogOpen(isOpen);
-          console.log('DeleteDataInDBDialogOk button canceled');
+         
           // Handle the cancel action here
         }
       };
@@ -211,7 +238,7 @@ const Scenario = () => {
     const handleDialogOk = () => {
         setIsDialogOpen(false);
         // Abort the program or take appropriate action here
-        console.log("Operation aborted by the user.");
+        
     }; 
 
     //Handle user response on merge or reset
@@ -219,16 +246,16 @@ const Scenario = () => {
         setDownloadDataDialogIsOpen(downloadDataDialogIsOpen);
         if (action === 'merge') {
             // Merge data
-            console.log("Merging data...");
+            
            
             await updateOrAddScenarioRecords(scenarioData, officeContext, "Scenario");
             
         } else if (action === 'reset') {
             // Reset data
-            console.log("Resetting data...");
+            
             await resetScenarioRecords(scenarioData, officeContext, "Scenario");
         }else if (action === 'cancel') {
-        console.log("DownloadData operation cancelled by the user");
+        
     }
     };
 
@@ -270,8 +297,6 @@ const Scenario = () => {
                 </div>
             </div>
             <Footer />
-
-            {isSpinner && (<Spinner appearance="primary" labelPosition="before" label="Upsert action started...." size="medium" />)}
 
             {DeleteDataInDBDialogOpen && (
                 <DeleteDataInDBDialog 

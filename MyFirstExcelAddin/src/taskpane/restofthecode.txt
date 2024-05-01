@@ -158,3 +158,5 @@ const defineScenarioTable = async (tableName) => {
 
 export { defineScenarioTable };
 
+
+
